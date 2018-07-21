@@ -15,13 +15,23 @@ const config = {
 firebase.initializeApp(config);
 
 class App extends React.Component {
-    render() {
-      return (
-        <div>
-          Hello
+  constructor() {
+    super();
+    this.state = {
+
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        <div className="jumbotron text-center">
+          <h1 className="page-header">Sailor Moon S Global Rankings</h1>
+          <p>Who's best at fighting evil by moonlight?</p>
         </div>
-      )
-    }
+      </div>
+    )
+  }
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
