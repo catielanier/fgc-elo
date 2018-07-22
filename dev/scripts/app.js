@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 import firebase from 'firebase';
+import Table from 'react-bootstrap/lib/Table';
+import Button from 'react-bootstrap/lib/Button';
+import Modal from 'react-bootstrap/lib/Modal';
 
 // Initialize Firebase
 const config = {
@@ -30,7 +33,8 @@ class App extends React.Component {
       playerCountry: '',
       playerMain: '',
       adminEmail: '',
-      adminPwd: ''
+      adminPwd: '',
+      show: false
     };
   }
 
@@ -41,7 +45,7 @@ class App extends React.Component {
           <p>Who's best at fighting evil by moonlight?</p>
         </div>
         <div className="container">
-          <table className="table table-striped table-bordered">
+          <Table striped bordered hover>
             <thead className="thead-dark text-center">
               <tr>
                 <th>Rank</th>
@@ -50,47 +54,49 @@ class App extends React.Component {
                 <th>Score</th>
               </tr>
             </thead>
-            <tr>
-              <th>1</th>
-              <td>
-                <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> TTT NeoRussell
-              </td>
-              <td className="main-char">
-                <img src="img/pluto.png" alt="Sailor Pluto" />
-              </td>
-              <td>1600</td>
-            </tr>
-            <tr>
-              <th>2</th>
-              <td>
-                <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> SMRT SRK Missing Person
-              </td>
-              <td className="main-char">
-                <img src="img/uranus.png" alt="Sailor Uranus" /> <img src="img/mercury.png" alt="Sailor Mercury" />
-              </td>
-              <td>1500</td>
-            </tr>
-            <tr>
-              <th>3</th>
-              <td>
-                <img src="flags/blank.gif" className="flag flag-us" alt="United States" /> Echo Fox Justin Wong
-              </td>
-              <td className="main-char">
-                <img src="img/mars.png" alt="Sailor Mars" />
-              </td>
-              <td>1490</td>
-            </tr>
-            <tr>
-              <th>4</th>
-              <td>
-                <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> 7PA Quiet Anger
-              </td>
-              <td className="main-char">
-                <img src="img/mercury.png" alt="Sailor Mercury" /> <img src="img/neptune.png" alt="Sailor Neptune" />
-              </td>
-              <td>1480</td>
-            </tr>
-          </table>
+            <tbody>
+              <tr>
+                <th>1</th>
+                <td>
+                  <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> TTT NeoRussell
+                </td>
+                <td className="main-char">
+                  <img src="img/pluto.png" alt="Sailor Pluto" />
+                </td>
+                <td>1600</td>
+              </tr>
+              <tr>
+                <th>2</th>
+                <td>
+                  <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> SMRT SRK Missing Person
+                </td>
+                <td className="main-char">
+                  <img src="img/uranus.png" alt="Sailor Uranus" /> <img src="img/mercury.png" alt="Sailor Mercury" />
+                </td>
+                <td>1500</td>
+              </tr>
+              <tr>
+                <th>3</th>
+                <td>
+                  <img src="flags/blank.gif" className="flag flag-us" alt="United States" /> Echo Fox Justin Wong
+                </td>
+                <td className="main-char">
+                  <img src="img/mars.png" alt="Sailor Mars" />
+                </td>
+                <td>1490</td>
+              </tr>
+              <tr>
+                <th>4</th>
+                <td>
+                  <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> 7PA Quiet Anger
+                </td>
+                <td className="main-char">
+                  <img src="img/mercury.png" alt="Sailor Mercury" /> <img src="img/neptune.png" alt="Sailor Neptune" />
+                </td>
+                <td>1480</td>
+              </tr>
+            </tbody>
+          </Table>
         </div>
       </div>;
   }
