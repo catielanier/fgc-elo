@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import Table from 'react-bootstrap/lib/Table';
 import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
+import PopulateRankings from './PopulateRankings';
 
 // Initialize Firebase
 const config = {
@@ -111,8 +112,8 @@ class App extends React.Component {
     const playerTwoExpectedScore = playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
 
     if (this.state.winner === 'playerOne') {
-      const playerOneUpdatedELO = playerOneOriginalELO + 32 * (1 - playerOneExpectedScore);
-      const playerTwoUpdatedELO = playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore);
+      const playerOneUpdatedELO = Math.round(playerOneOriginalELO + 32 * (0 - playerOneExpectedScore));
+      const playerTwoUpdatedELO = Math.round(playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore));
 
       this.dbRefPlayerOne.update({
         ELO: playerOneUpdatedELO
@@ -129,8 +130,8 @@ class App extends React.Component {
       })
 
     } else {
-      const playerOneUpdatedELO = playerOneOriginalELO + 32 * (0 - playerOneExpectedScore);
-      const playerTwoUpdatedELO = playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore);
+      const playerOneUpdatedELO = Math.round(playerOneOriginalELO + 32 * (0 - playerOneExpectedScore));
+      const playerTwoUpdatedELO = Math.round(playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore));
 
       this.dbRefPlayerOne.update({
         ELO: playerOneUpdatedELO
@@ -165,46 +166,9 @@ class App extends React.Component {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>1</th>
-                <td>
-                  <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> TTT NeoRussell
-                </td>
-                <td className="main-char">
-                  <img src="img/pluto.png" alt="Sailor Pluto" />
-                </td>
-                <td>1600</td>
-              </tr>
-              <tr>
-                <th>2</th>
-                <td>
-                  <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> SMRT SRK Missing Person
-                </td>
-                <td className="main-char">
-                  <img src="img/uranus.png" alt="Sailor Uranus" /> <img src="img/mercury.png" alt="Sailor Mercury" />
-                </td>
-                <td>1500</td>
-              </tr>
-              <tr>
-                <th>3</th>
-                <td>
-                  <img src="flags/blank.gif" className="flag flag-us" alt="United States" /> Echo Fox Justin Wong
-                </td>
-                <td className="main-char">
-                  <img src="img/mars.png" alt="Sailor Mars" />
-                </td>
-                <td>1490</td>
-              </tr>
-              <tr>
-                <th>4</th>
-                <td>
-                  <img src="flags/blank.gif" className="flag flag-ca" alt="Canada" /> 7PA Quiet Anger
-                </td>
-                <td className="main-char">
-                  <img src="img/mercury.png" alt="Sailor Mercury" /> <img src="img/neptune.png" alt="Sailor Neptune" />
-                </td>
-                <td>1480</td>
-              </tr>
+              {this.state.rankings.map((player, index) => {
+                return <PopulateRankings playerName={player.playerName} index={index} teamName={player.teamName} elo={player.ELO} countryShort={player.countryShort} countryLong={player.countryLong} mainShort={player.mainShort} mainLong={player.mainLong} key={index}/>
+              })}
             </tbody>
           </Table>
         </div>
