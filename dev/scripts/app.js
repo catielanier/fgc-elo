@@ -39,6 +39,10 @@ class App extends React.Component {
 
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handlePlayerOne = this.handlePlayerOne.bind(this);
+    this.handlePlayerTwo = this.handlePlayerTwo.bind(this);
+    this.handleWinner = this.handleWinner.bind(this);
+    this.calculateELO = this.calculateELO.bind(this);
   }
 
   handleShow() {
@@ -47,6 +51,48 @@ class App extends React.Component {
 
   handleClose() {
     this.setState({show: false});
+  }
+  
+  handlePlayerOne(e) {
+    const playerName = e.target.value;
+    this.setState({playerOne: playerName});
+  }
+
+  handlePlayerTwo(e) {
+    const playerName = e.target.value;
+    this.setState({playerTwo: playerName});
+  }
+
+  handleWinner(e) {
+    const winner = e.target.value;
+    this.setState({winner: winner});
+  }
+
+  calculateELO(e) {
+    e.preventDefault();
+
+    const playerOneOriginalELO = 1200;
+    const playerTwoOriginalELO = 1200;
+
+    const playerOneTransELO = Math.pow(10, playerOneOriginalELO / 400);
+    const playerTwoTransELO = Math.pow(10, playerTwoOriginalELO / 400);
+
+    const playerOneExpectedScore = playerOneTransELO / (playerOneTransELO + playerTwoTransELO);
+    const playerTwoExpectedScore = playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
+
+    if (this.state.winner === 'playerOne') {
+      const playerOneUpdatedELO = playerOneOriginalELO + 32 * (1 - playerOneExpectedScore);
+      const playerTwoUpdatedELO = playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore);
+
+      console.log(`${this.state.playerOne}'s new ELO score is ${playerOneUpdatedELO}.`);
+      console.log(`${this.state.playerTwo}'s new ELO score is ${playerTwoUpdatedELO}.`);
+    } else {
+      const playerOneUpdatedELO = playerOneOriginalELO + 32 * (0 - playerOneExpectedScore);
+      const playerTwoUpdatedELO = playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore);
+
+      console.log(`${this.state.playerOne}'s new ELO score is ${playerOneUpdatedELO}.`);
+      console.log(`${this.state.playerTwo}'s new ELO score is ${playerTwoUpdatedELO}.`);
+    }
   }
 
   render() {
@@ -129,17 +175,16 @@ class App extends React.Component {
                   <label htmlFor="player-two">Player Two</label>
                   <input type="text" name="player-two" className="form-control" placeholder="(Do not include sponsor/team tag)" value={this.state.playerTwo} onChange={this.handlePlayerTwo}/>
                 </div>
-                <div className="form-group">
-                  <label className="radio-inline">Choose the winner:</label>
-                  <label className="radio-inline">
-                    <input type="radio" name="winner-select" value="playerOne"/> Player One
-                  </label>
-                  <label className="radio-inline">
-                    <input type="radio" name="winner-select" value="playerTwo"/> Player Two
-                  </label>
+                <div className="form-group text-center">
+                  <label>Please choose the winner:</label>
+                  <select name="" id="" className="form-control" onChange={this.handleWinner} defaultValue="">
+                    <option value="">--Choose one option--</option>
+                    <option value="playerOne">Player One</option>
+                    <option value="playerTwo">Player Two</option>
+                  </select>
                 </div>
                 <div className="form-group text-center">
-                  <Button type="submit" className="btn-primary btn-lg">Submit</Button>
+                  <Button type="submit" className="btn-primary btn-lg" onClick={this.calculateELO}>Submit</Button>
                   <Button className="btn-lg">Clear</Button>
                 </div>
               </form>
