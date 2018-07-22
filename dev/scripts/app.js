@@ -112,8 +112,8 @@ class App extends React.Component {
     const playerTwoExpectedScore = playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
 
     if (this.state.winner === 'playerOne') {
-      const playerOneUpdatedELO = Math.round(playerOneOriginalELO + 32 * (0 - playerOneExpectedScore));
-      const playerTwoUpdatedELO = Math.round(playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore));
+      const playerOneUpdatedELO = Math.round(playerOneOriginalELO + 32 * (1 - playerOneExpectedScore));
+      const playerTwoUpdatedELO = Math.round(playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore));
 
       this.dbRefPlayerOne.update({
         ELO: playerOneUpdatedELO
