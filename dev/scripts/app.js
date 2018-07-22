@@ -20,6 +20,7 @@ firebase.initializeApp(config);
 class App extends React.Component {
   constructor() {
     super();
+
     this.state = {
       loggedIn: false,
       playerOne: '',
@@ -34,7 +35,8 @@ class App extends React.Component {
       playerMain: '',
       adminEmail: '',
       adminPwd: '',
-      show: false
+      show: false,
+      teamName: ''
     };
 
     this.handleShow = this.handleShow.bind(this);
@@ -43,6 +45,23 @@ class App extends React.Component {
     this.handlePlayerTwo = this.handlePlayerTwo.bind(this);
     this.handleWinner = this.handleWinner.bind(this);
     this.calculateELO = this.calculateELO.bind(this);
+  }
+
+  componentDidMount() {
+    this.dbRef = firebase.database().ref();
+    this.dbRef.on('value', snapshot => {
+      const rankings = snapshot.val();
+      const rankingsArray = [];
+      for (let item in rankings) {
+        rankingsArray.push(rankings[item])
+      }
+      rankingsArray.sort((a, b) => {
+        return b.ELO - a.ELO
+      });
+      this.setState({
+        rankings: rankingsArray
+      });
+    });
   }
 
   handleShow() {
@@ -71,8 +90,19 @@ class App extends React.Component {
   calculateELO(e) {
     e.preventDefault();
 
-    const playerOneOriginalELO = 1200;
-    const playerTwoOriginalELO = 1200;
+    this.dbRefPlayerOne = firebase.database().ref(`${this.state.playerOne}/`);
+    this.dbRefPlayerTwo = firebase.database().ref(`${this.state.playerTwo}/`);
+
+    let playerOneOriginalELO = 1200;
+    let playerTwoOriginalELO = 1200;
+
+    this.dbRefPlayerOne.on('value', snapshot => {
+      playerOneOriginalELO = snapshot.val().ELO;
+    });
+
+    this.dbRefPlayerTwo.on('value', snapshot => {
+      playerTwoOriginalELO = snapshot.val().ELO;
+    });
 
     const playerOneTransELO = Math.pow(10, playerOneOriginalELO / 400);
     const playerTwoTransELO = Math.pow(10, playerTwoOriginalELO / 400);
@@ -84,14 +114,37 @@ class App extends React.Component {
       const playerOneUpdatedELO = playerOneOriginalELO + 32 * (1 - playerOneExpectedScore);
       const playerTwoUpdatedELO = playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore);
 
-      console.log(`${this.state.playerOne}'s new ELO score is ${playerOneUpdatedELO}.`);
-      console.log(`${this.state.playerTwo}'s new ELO score is ${playerTwoUpdatedELO}.`);
+      this.dbRefPlayerOne.update({
+        ELO: playerOneUpdatedELO
+      });
+
+      this.dbRefPlayerTwo.update({
+        ELO: playerTwoUpdatedELO
+      });
+
+      this.setState({
+        playerOne: '',
+        playerTwo: '',
+        winner: ''
+      })
+
     } else {
       const playerOneUpdatedELO = playerOneOriginalELO + 32 * (0 - playerOneExpectedScore);
       const playerTwoUpdatedELO = playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore);
 
-      console.log(`${this.state.playerOne}'s new ELO score is ${playerOneUpdatedELO}.`);
-      console.log(`${this.state.playerTwo}'s new ELO score is ${playerTwoUpdatedELO}.`);
+      this.dbRefPlayerOne.update({
+        ELO: playerOneUpdatedELO
+      });
+
+      this.dbRefPlayerTwo.update({
+        ELO: playerTwoUpdatedELO
+      });
+
+      this.setState({
+        playerOne: '',
+        playerTwo: '',
+        winner: ''
+      })
     }
   }
 
@@ -175,7 +228,7 @@ class App extends React.Component {
                   <label htmlFor="player-two">Player Two</label>
                   <input type="text" name="player-two" className="form-control" placeholder="(Do not include sponsor/team tag)" value={this.state.playerTwo} onChange={this.handlePlayerTwo}/>
                 </div>
-                <div className="form-group text-center">
+                <div className="form-group">
                   <label>Please choose the winner:</label>
                   <select name="" id="" className="form-control" onChange={this.handleWinner} defaultValue="">
                     <option value="">--Choose one option--</option>
