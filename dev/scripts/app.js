@@ -36,6 +36,17 @@ class App extends React.Component {
       adminPwd: '',
       show: false
     };
+
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleShow() {
+    this.setState({show: true});
+  }
+
+  handleClose() {
+    this.setState({show: false});
   }
 
   render() {
@@ -98,7 +109,44 @@ class App extends React.Component {
             </tbody>
           </Table>
         </div>
-      </div>;
+        <div className="container text-center">
+          <Button className="btn-primary btn-lg" onClick={this.handleShow}>
+            Add Match
+          </Button>
+        </div>
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Add Match to ELO
+            </Modal.Title>
+            <Modal.Body>
+              <form>
+                <div className="form-group">
+                  <label htmlFor="player-one">Player One</label>
+                  <input type="text" name="player-one" className="form-control" placeholder="(Do not include sponsor/team tag)" value={this.state.playerOne} onChange={this.handlePlayerOne}/>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="player-two">Player Two</label>
+                  <input type="text" name="player-two" className="form-control" placeholder="(Do not include sponsor/team tag)" value={this.state.playerTwo} onChange={this.handlePlayerTwo}/>
+                </div>
+                <div className="form-group">
+                  <label className="radio-inline">Choose the winner:</label>
+                  <label className="radio-inline">
+                    <input type="radio" name="winner-select" value="playerOne"/> Player One
+                  </label>
+                  <label className="radio-inline">
+                    <input type="radio" name="winner-select" value="playerTwo"/> Player Two
+                  </label>
+                </div>
+                <div className="form-group text-center">
+                  <Button type="submit" className="btn-primary btn-lg">Submit</Button>
+                  <Button className="btn-lg">Clear</Button>
+                </div>
+              </form>
+            </Modal.Body>
+          </Modal.Header>
+        </Modal>
+      </div>
   }
 }
 
