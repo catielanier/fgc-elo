@@ -125,8 +125,7 @@ class App extends React.Component {
 
       this.setState({
         playerOne: '',
-        playerTwo: '',
-        winner: ''
+        playerTwo: ''
       })
 
     } else {
@@ -143,8 +142,7 @@ class App extends React.Component {
 
       this.setState({
         playerOne: '',
-        playerTwo: '',
-        winner: ''
+        playerTwo: ''
       })
     }
   }
@@ -156,13 +154,13 @@ class App extends React.Component {
           <p>Who's best at fighting evil by moonlight?</p>
         </div>
         <div className="container">
-          <Table striped bordered hover>
+          <Table striped bordered>
             <thead className="thead-dark text-center">
               <tr>
                 <th>Rank</th>
-                <th>Player</th>
-                <th>Main</th>
-                <th>Score</th>
+                <th className="player-name">Player</th>
+                <th className="main-char">Main</th>
+                <th className="score">Score</th>
               </tr>
             </thead>
             <tbody>

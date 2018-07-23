@@ -5,6 +5,7 @@
 
 body {
     font-family: 'Dosis';
+    padding-bottom: 50px;
 }
 
 .jumbotron {
@@ -51,14 +52,24 @@ body {
 }
 
 table {
+    width: 500px;
     font-size: 18px;
+    border-color: #e9b;
 
     thead {
         font-size: 20px;
     }
 
-    .main-char img {
-        height: 18px;
+    .main-char {
+        width: 50px;
+
+        img {
+            height: 18px;
+        }
+    }
+    
+    .score {
+        width: 60px;
     }
 
     td, tr th {
@@ -73,4 +84,19 @@ table {
     img.flag {
         margin-top: -5px;
     }
+
+    .team-name {
+        font-weight: bold;
+        color: #2ad;
+    }
+
+    thead tr {
+        background: #923;
+        color: #fed;
+    }
+
+    tr {
+        background: lighten(#e9b, 20);
+    }
+
 }
