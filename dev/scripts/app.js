@@ -111,40 +111,21 @@ class App extends React.Component {
     const playerOneExpectedScore = playerOneTransELO / (playerOneTransELO + playerTwoTransELO);
     const playerTwoExpectedScore = playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
 
-    if (this.state.winner === 'playerOne') {
-      const playerOneUpdatedELO = Math.round(playerOneOriginalELO + 32 * (1 - playerOneExpectedScore));
-      const playerTwoUpdatedELO = Math.round(playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore));
+    const playerOneUpdatedELO = Math.round(playerOneOriginalELO + 32 * (1 - playerOneExpectedScore));
+    const playerTwoUpdatedELO = Math.round(playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore));
 
-      this.dbRefPlayerOne.update({
-        ELO: playerOneUpdatedELO
-      });
+    this.dbRefPlayerOne.update({
+      ELO: playerOneUpdatedELO
+    });
 
-      this.dbRefPlayerTwo.update({
-        ELO: playerTwoUpdatedELO
-      });
+    this.dbRefPlayerTwo.update({
+      ELO: playerTwoUpdatedELO
+    });
 
-      this.setState({
-        playerOne: '',
-        playerTwo: ''
-      })
-
-    } else {
-      const playerOneUpdatedELO = Math.round(playerOneOriginalELO + 32 * (0 - playerOneExpectedScore));
-      const playerTwoUpdatedELO = Math.round(playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore));
-
-      this.dbRefPlayerOne.update({
-        ELO: playerOneUpdatedELO
-      });
-
-      this.dbRefPlayerTwo.update({
-        ELO: playerTwoUpdatedELO
-      });
-
-      this.setState({
-        playerOne: '',
-        playerTwo: ''
-      })
-    }
+    this.setState({
+      playerOne: '',
+      playerTwo: ''
+    })
   }
 
   render() {
@@ -183,20 +164,12 @@ class App extends React.Component {
             <Modal.Body>
               <form>
                 <div className="form-group">
-                  <label htmlFor="player-one">Player One</label>
+                  <label htmlFor="player-one">Winner</label>
                   <input type="text" name="player-one" className="form-control" placeholder="(Do not include sponsor/team tag)" value={this.state.playerOne} onChange={this.handlePlayerOne}/>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="player-two">Player Two</label>
+                  <label htmlFor="player-two">Loser</label>
                   <input type="text" name="player-two" className="form-control" placeholder="(Do not include sponsor/team tag)" value={this.state.playerTwo} onChange={this.handlePlayerTwo}/>
-                </div>
-                <div className="form-group">
-                  <label>Please choose the winner:</label>
-                  <select name="" id="" className="form-control" onChange={this.handleWinner} defaultValue="">
-                    <option value="">--Choose one option--</option>
-                    <option value="playerOne">Player One</option>
-                    <option value="playerTwo">Player Two</option>
-                  </select>
                 </div>
                 <div className="form-group text-center">
                   <Button type="submit" className="btn-primary btn-lg" onClick={this.calculateELO}>Submit</Button>
