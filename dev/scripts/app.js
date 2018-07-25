@@ -272,7 +272,7 @@ class App extends React.Component {
             </div>
           :
             <div>
-              <Button className="btn-primary btn-lg" onClick={this.handleShowELO}>
+              <Button className="btn-primary btn-lg add-match" onClick={this.handleShowELO}>
                 Add Match
               </Button>
               <Button className="btn-lg" onClick={this.handleShowUser}>
