@@ -35,10 +35,12 @@ class App extends React.Component {
       adminPwd: '',
       showAddELO: false,
       showAddUser: false,
+      showLogin: false,
       teamName: '',
       playerName: '',
       playerMainShort: '',
-      playerMainLong: ''
+      playerMainLong: '',
+      loginErr: false
     };
 
     this.handleShowELO = this.handleShowELO.bind(this);
@@ -54,6 +56,11 @@ class App extends React.Component {
     this.handleCountry = this.handleCountry.bind(this);
     this.handleMain = this.handleMain.bind(this);
     this.addPlayer = this.addPlayer.bind(this);
+    this.handleShowLogin = this.handleShowLogin.bind(this);
+    this.handleCloseLogin = this.handleCloseLogin.bind(this);
+    this.handleEmail = this.handleEmail.bind(this);
+    this.handlePwd = this.handlePwd.bind(this);
+    this.doLogin = this.doLogin.bind(this);
   }
 
   componentDidMount() {
@@ -71,6 +78,26 @@ class App extends React.Component {
         rankings: rankingsArray
       });
     });
+  }
+
+  doLogin(e) {
+    e.preventDefault();
+    const email = this.state.adminEmail;
+    const password = this.state.adminPwd;
+    firebase.auth().signInWithEmailAndPassword(email, password).then((success) => {
+      console.log(`Logged in as ${success.user.email}`);
+      this.setState({
+          adminEmail: '',
+          adminPwd: '',
+          loggedIn: true,
+          showLogin: false,
+          loginErr: false
+      });
+    }).catch((error) => {
+      this.setState({
+        loginErr: true
+      });
+    });            
   }
   
   addPlayer(e) {
@@ -110,6 +137,20 @@ class App extends React.Component {
     });
   }
 
+  handleEmail(e) {
+    const email = e.target.value;
+    this.setState({
+      adminEmail: email
+    });
+  }
+
+  handlePwd(e) {
+    const pwd = e.target.value;
+    this.setState({
+      adminPwd: pwd
+    });
+  }
+
   handleNewPlayer(e) {
     const playerName = e.target.value;
     this.setState({playerName: playerName});
@@ -121,6 +162,14 @@ class App extends React.Component {
 
   handleCloseELO() {
     this.setState({showAddELO: false});
+  }
+
+  handleShowLogin() {
+    this.setState({showLogin: true});
+  }
+
+  handleCloseLogin() {
+    this.setState({showLogin: false});
   }
 
   handleShowUser() {
@@ -217,7 +266,7 @@ class App extends React.Component {
         <div className="container text-center">
           {this.state.loggedIn === false ? 
             <div>
-              <Button className="btn-lg btn-primary" onClick={this.handleLogin}>
+              <Button className="btn-lg btn-primary" onClick={this.handleShowLogin}>
                 Login
               </Button>
             </div>
@@ -232,6 +281,34 @@ class App extends React.Component {
             </div>
           }
         </div>
+        <Modal show={this.state.showLogin} onHide={this.handleCloseLogin}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Login
+            </Modal.Title>
+            <Modal.Body>
+              {this.state.loginErr === true ?
+                  <div className="alert alert-danger">
+                    Invalid email or password!
+                  </div>
+                : null
+              }
+              <form>
+                <div className="form-group">
+                  <input type="text" className="form-control" value={this.state.adminEmail} onChange={this.handleEmail} placeholder="Email Address"/>
+                </div>
+                <div className="form-group">
+                  <input type="password" className="form-control" value={this.state.adminPwd} onChange={this.handlePwd} placeholder="Password"/>
+                </div>
+                <div className="form-group text-center">
+                  <Button type="submit" className="btn-primary btn-lg" onClick={this.doLogin}>
+                    Login
+                  </Button>
+                </div>
+              </form>
+            </Modal.Body>
+          </Modal.Header>
+        </Modal>
         <Modal show={this.state.showAddUser} onHide={this.handleCloseUser}>
           <Modal.Header closeButton>
             <Modal.Title>
