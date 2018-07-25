@@ -215,12 +215,22 @@ class App extends React.Component {
           </Table>
         </div>
         <div className="container text-center">
-          <Button className="btn-primary btn-lg" onClick={this.handleShowELO}>
-            Add Match
-          </Button>
-          <Button className="btn-lg" onClick={this.handleShowUser}>
-            Add User
-          </Button>
+          {this.state.loggedIn === false ? 
+            <div>
+              <Button className="btn-lg btn-primary" onClick={this.handleLogin}>
+                Login
+              </Button>
+            </div>
+          :
+            <div>
+              <Button className="btn-primary btn-lg" onClick={this.handleShowELO}>
+                Add Match
+              </Button>
+              <Button className="btn-lg" onClick={this.handleShowUser}>
+                Add User
+              </Button>
+            </div>
+          }
         </div>
         <Modal show={this.state.showAddUser} onHide={this.handleCloseUser}>
           <Modal.Header closeButton>
