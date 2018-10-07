@@ -258,7 +258,7 @@ class App extends React.Component {
             </thead>
             <tbody>
               {this.state.rankings.map((player, index) => {
-                return <PopulateRankings playerName={player.playerName} index={index} teamName={player.teamName} elo={player.ELO} countryShort={player.countryShort} countryLong={player.countryLong} mainShort={player.mainShort} mainLong={player.mainLong} key={index}/>
+                return <PopulateRankings playerName={player.playerName} index={index} teamName={player.teamName} elo={player.ELO} countryShort={player.countryShort} countryLong={player.countryLong} mainShort={player.mainShort} mainLong={player.mainLong} twitterHandle={player.twitter} key={index}/>
               })}
             </tbody>
           </Table>
