@@ -43,6 +43,9 @@ class App extends React.Component {
       loginErr: false
     };
 
+    const userLang = navigator.language || navigator.userLanguage
+    console.log(`Your language is ${userLang}`);
+
     this.handleShowELO = this.handleShowELO.bind(this);
     this.handleCloseELO = this.handleCloseELO.bind(this);
     this.handlePlayerOne = this.handlePlayerOne.bind(this);
