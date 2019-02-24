@@ -94,6 +94,14 @@ table {
         color: #2ad;
     }
 
+    .fa-twitch {
+        color: #4B367C;
+
+        &:hover {
+            color: darken(#4B367C, 10);
+        }
+    }
+
     thead tr {
         background: #923;
         color: #fed;
