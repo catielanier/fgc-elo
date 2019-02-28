@@ -351,30 +351,30 @@ class App extends React.Component {
                 </tr> 
               : this.state.userLocale === 'ja' ?
                 <tr>
-                  <th>{this.state.locale.ja.rankTitle}</th>
+                  <th className="ja-rank">{this.state.locale.ja.rankTitle}</th>
                   <th className="player-name">{this.state.locale.ja.playerTitle}</th>
-                  <th className="main-char">{this.state.locale.ja.characterTitle}</th>
-                  <th className="score">{this.state.locale.ja.scoreTitle}</th>
+                  <th className="main-char ja-main-char">{this.state.locale.ja.characterTitle}</th>
+                  <th className="score ja-score">{this.state.locale.ja.scoreTitle}</th>
                 </tr> 
               : this.state.userLocale === 'ko' ?
                 <tr>
                   <th>{this.state.locale.ko.rankTitle}</th>
                   <th className="player-name">{this.state.locale.ko.playerTitle}</th>
-                  <th className="main-char">{this.state.locale.ko.characterTitle}</th>
-                  <th className="score">{this.state.locale.ko.scoreTitle}</th>
+                  <th className="main-char ko-main-char">{this.state.locale.ko.characterTitle}</th>
+                  <th className="score ko-score">{this.state.locale.ko.scoreTitle}</th>
                 </tr> 
               : this.state.userLocale === 'zh-CN' ?
                 <tr>
                   <th>{this.state.locale.cn.rankTitle}</th>
                   <th className="player-name">{this.state.locale.cn.playerTitle}</th>
-                  <th className="main-char">{this.state.locale.cn.characterTitle}</th>
+                  <th className="main-char zh-main-char">{this.state.locale.cn.characterTitle}</th>
                   <th className="score">{this.state.locale.cn.scoreTitle}</th>
                 </tr> 
               : this.state.userLocale === 'zh-HK' ?
                 <tr>
                   <th>{this.state.locale.hk.rankTitle}</th>
                   <th className="player-name">{this.state.locale.hk.playerTitle}</th>
-                  <th className="main-char">{this.state.locale.hk.characterTitle}</th>
+                  <th className="main-char zh-main-char">{this.state.locale.hk.characterTitle}</th>
                   <th className="score">{this.state.locale.hk.scoreTitle}</th>
                 </tr>
               : this.state.userLocale.startsWith('es') ?

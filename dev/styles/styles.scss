@@ -70,10 +70,26 @@ table {
         img {
             height: 18px;
         }
+
+        &.zh-main-char {
+            width: 60px;
+        }
+        
+        &.ko-main-char {
+            width: 75px;
+        }
+
+        &.ja-main-char {
+            width: 125px;
+        }
     }
     
     .score {
         width: 60px;
+
+        &.ko-score, &.ja-score {
+            width: 75px;
+        }
     }
 
     td, tr th {
@@ -83,6 +99,9 @@ table {
     tr th:first-of-type {
         width: 60px;
         text-align: center;
+        &.ja-rank {
+            width: 75px;
+        }
     }
 
     img.flag {
