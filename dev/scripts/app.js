@@ -98,6 +98,14 @@ class App extends React.Component {
           characterTitle: '人物',
           playerTitle: '播放機',
           subHeading: ''
+        },
+        ru: {
+          pageTitle: `Сейлор Мун Глобальный Pейтинг`,
+          scoreTitle: `Точки`,
+          rankTitle: `Ранг`,
+          characterTitle: `Герой`,
+          playerTitle: `Игрок`,
+          subHeading: ``
         }
       }
     };
@@ -333,6 +341,11 @@ class App extends React.Component {
             <h1 className="page-header">{this.state.locale.es.pageTitle}</h1>
             <p>{this.state.locale.es.subHeading}</p>
           </div>
+        : this.state.userLocale.startsWith('ru') ?
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.ru.pageTitle}</h1>
+            <p>{this.state.locale.ru.subHeading}</p>
+          </div>
         :
           <div className="jumbotron text-center">
             <h1 className="page-header">{this.state.locale.en.pageTitle}</h1>
@@ -383,6 +396,13 @@ class App extends React.Component {
                   <th className="player-name">{this.state.locale.es.playerTitle}</th>
                   <th className="main-char">{this.state.locale.es.characterTitle}</th>
                   <th className="score">{this.state.locale.es.scoreTitle}</th>
+                </tr>
+              : this.state.userLocale.startsWith('ru') ?
+                <tr>
+                  <th>{this.state.locale.ru.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.ru.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.ru.characterTitle}</th>
+                  <th className="score">{this.state.locale.ru.scoreTitle}</th>
                 </tr>
               :
                 <tr>
