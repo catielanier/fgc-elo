@@ -368,14 +368,14 @@ class App extends React.Component {
                   <th>{this.state.locale.cn.rankTitle}</th>
                   <th className="player-name">{this.state.locale.cn.playerTitle}</th>
                   <th className="main-char zh-main-char">{this.state.locale.cn.characterTitle}</th>
-                  <th className="score">{this.state.locale.cn.scoreTitle}</th>
+                  <th className="score zh-score">{this.state.locale.cn.scoreTitle}</th>
                 </tr> 
               : this.state.userLocale === 'zh-HK' ?
                 <tr>
                   <th>{this.state.locale.hk.rankTitle}</th>
                   <th className="player-name">{this.state.locale.hk.playerTitle}</th>
                   <th className="main-char zh-main-char">{this.state.locale.hk.characterTitle}</th>
-                  <th className="score">{this.state.locale.hk.scoreTitle}</th>
+                  <th className="score zh-score">{this.state.locale.hk.scoreTitle}</th>
                 </tr>
               : this.state.userLocale.startsWith('es') ?
                 <tr>

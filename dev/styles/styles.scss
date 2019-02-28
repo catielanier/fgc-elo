@@ -90,6 +90,10 @@ table {
         &.ko-score, &.ja-score {
             width: 75px;
         }
+
+        &.zh-score {
+            text-align: center;
+        }
     }
 
     td, tr th {
