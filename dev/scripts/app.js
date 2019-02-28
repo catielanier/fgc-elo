@@ -40,11 +40,61 @@ class App extends React.Component {
       playerName: '',
       playerMainShort: '',
       playerMainLong: '',
-      loginErr: false
+      loginErr: false,
+      userLocale: navigator.language || navigator.userLanguage,
+      locale: {
+        en: {
+          pageTitle: `Sailor Moon S Global Rankings`,
+          subHeading: `Who's the best at fighting evil by moonlight?`,
+          rankTitle: `Rank`,
+          playerTitle: 'Player',
+          characterTitle: `Main`,
+          scoreTitle: `Score`
+        },
+        ko: {
+          pageTitle: `세일러문 국제 랭킹`,
+          rankTitle: `랭크`,
+          playerTitle: `선수`,
+          characterTitle: `캐릭터`,
+          scoreTitle: `포인트`,
+          subHeading: ``
+        },
+        ja: {
+          pageTitle: `セーラームーンS国際のランキング`,
+          rankTitle: `ランク`,
+          playerTitle: `プレヤー`,
+          characterTitle: `キャラクター`,
+          scoreTitle: `スコア`,
+          subHeading: ``
+        },
+        cn: {
+          pageTitle: `美少女戰士国际排行`,
+          rankTitle: `等级`,
+          playerTitle: `播放机`,
+          characterTitle: `人物`,
+          scoreTitle: `点`,
+          subHeading: ``,
+        },
+        es: {
+          pageTitle: `Clasificación mundial de Sailor Moon S`,
+          rankTitle: `Rango`,
+          playerTitle: `Jugador`,
+          characterTitle: `Protagonista`,
+          scoreTitle: `Puntuación`,
+          subHeading: ``,
+        },
+        eo: {
+          pageTitle: `Sailor Moon S Tutmondaj Rangoj`,
+          rankTitle: `Rango`,
+          playerTitle: `Ludanto`,
+          characterTitle: `Ĉefkaraktero`,
+          scoreTitle: `Poentaro`,
+          subHeading: `Kiu plej bonas batali malbonon per luno?`
+        }
+      }
     };
 
-    const userLang = navigator.language || navigator.userLanguage
-    console.log(`Your language is ${userLang}`);
+    console.log(`Your language is ${this.state.userLocale}`);
 
     this.handleShowELO = this.handleShowELO.bind(this);
     this.handleCloseELO = this.handleCloseELO.bind(this);
