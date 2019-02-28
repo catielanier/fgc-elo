@@ -60,7 +60,7 @@ class App extends React.Component {
           subHeading: ``
         },
         ja: {
-          pageTitle: `セーラームーンS国際のランキング`,
+          pageTitle: `セーラームーン国際のランキング`,
           rankTitle: `ランク`,
           playerTitle: `プレヤー`,
           characterTitle: `キャラクター`,
@@ -90,6 +90,14 @@ class App extends React.Component {
           characterTitle: `Ĉefkaraktero`,
           scoreTitle: `Poentaro`,
           subHeading: `Kiu plej bonas batali malbonon per luno?`
+        },
+        hk: {
+          pageTitle: `美少女戰士國際排行`,
+          scoreTitle: `計`,
+          rankTitle: `等級`,
+          characterTitle: '人物',
+          playerTitle: '播放機',
+          subHeading: ''
         }
       }
     };
@@ -295,19 +303,95 @@ class App extends React.Component {
 
   render() {
     return <div>
-        <div className="jumbotron text-center">
-          <h1 className="page-header">Sailor Moon S Global Rankings</h1>
-          <p>Who's best at fighting evil by moonlight?</p>
-        </div>
+        {this.state.userLocale === 'eo' ?
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.eo.pageTitle}</h1>
+            <p>{this.state.locale.eo.subHeading}</p>
+          </div>
+        : this.state.userLocale === 'ja' ?
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.ja.pageTitle}</h1>
+            <p>{this.state.locale.ja.subHeading}</p>
+          </div>
+        : this.state.userLocale === 'ko' ?
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.ko.pageTitle}</h1>
+            <p>{this.state.locale.ko.subHeading}</p>
+          </div>
+        : this.state.userLocale === 'zh-CN' ?
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.cn.pageTitle}</h1>
+            <p>{this.state.locale.cn.subHeading}</p>
+          </div>
+        : this.state.userLocale === 'zh-HK' ?
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.hk.pageTitle}</h1>
+            <p>{this.state.locale.hk.subHeading}</p>
+          </div>
+        : this.state.userLocale.startsWith('es') ?
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.es.pageTitle}</h1>
+            <p>{this.state.locale.es.subHeading}</p>
+          </div>
+        :
+          <div className="jumbotron text-center">
+            <h1 className="page-header">{this.state.locale.en.pageTitle}</h1>
+            <p>{this.state.locale.en.subHeading}</p>
+          </div>
+        }
         <div className="container">
           <Table striped bordered>
             <thead className="thead-dark text-center">
-              <tr>
-                <th>Rank</th>
-                <th className="player-name">Player</th>
-                <th className="main-char">Main</th>
-                <th className="score">Score</th>
-              </tr>
+              {this.state.userLocale === 'eo' ? 
+                <tr>
+                  <th>{this.state.locale.eo.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.eo.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.eo.characterTitle}</th>
+                  <th className="score">{this.state.locale.eo.scoreTitle}</th>
+                </tr> 
+              : this.state.userLocale === 'ja' ?
+                <tr>
+                  <th>{this.state.locale.ja.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.ja.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.ja.characterTitle}</th>
+                  <th className="score">{this.state.locale.ja.scoreTitle}</th>
+                </tr> 
+              : this.state.userLocale === 'ko' ?
+                <tr>
+                  <th>{this.state.locale.ko.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.ko.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.ko.characterTitle}</th>
+                  <th className="score">{this.state.locale.ko.scoreTitle}</th>
+                </tr> 
+              : this.state.userLocale === 'zh-CN' ?
+                <tr>
+                  <th>{this.state.locale.cn.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.cn.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.cn.characterTitle}</th>
+                  <th className="score">{this.state.locale.cn.scoreTitle}</th>
+                </tr> 
+              : this.state.userLocale === 'zh-HK' ?
+                <tr>
+                  <th>{this.state.locale.hk.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.hk.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.hk.characterTitle}</th>
+                  <th className="score">{this.state.locale.hk.scoreTitle}</th>
+                </tr>
+              : this.state.userLocale.startsWith('es') ?
+                <tr>
+                  <th>{this.state.locale.es.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.es.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.es.characterTitle}</th>
+                  <th className="score">{this.state.locale.es.scoreTitle}</th>
+                </tr>
+              :
+                <tr>
+                  <th>{this.state.locale.en.rankTitle}</th>
+                  <th className="player-name">{this.state.locale.en.playerTitle}</th>
+                  <th className="main-char">{this.state.locale.en.characterTitle}</th>
+                  <th className="score">{this.state.locale.en.scoreTitle}</th>
+                </tr> 
+              }
             </thead>
             <tbody>
               {this.state.rankings.map((player, index) => {
