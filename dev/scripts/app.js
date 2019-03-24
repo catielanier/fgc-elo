@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 import firebase from 'firebase';
-import Table from 'react-bootstrap/lib/Table';
-import Button from 'react-bootstrap/lib/Button';
-import Modal from 'react-bootstrap/lib/Modal';
+import { Table, Button, Modal } from 'react-bootstrap/lib';
 import PopulateRankings from './PopulateRankings';
 
 // Initialize Firebase
