@@ -185,6 +185,7 @@ header .header-text {
   left: 50%;
   transform: translate(-50%, -50%);
   color: #bcd;
+  text-shadow: 1px 1px 7px rgba(150, 150, 150, 1);
 }
 
 header .admin-buttons {
@@ -193,7 +194,8 @@ header .admin-buttons {
   right: 10%;
 }
 
-header .admin-buttons a {
+header .admin-buttons a,
+form input[type="submit"] {
   display: inline-block;
   text-decoration: none;
   background: #923;
@@ -205,7 +207,8 @@ header .admin-buttons a {
   transition: all 0.3s ease-in-out;
 }
 
-header .admin-buttons a:hover {
+header .admin-buttons a:hover,
+form input[type="submit"]:hover {
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
   background: #8a1b2a;
 }
@@ -213,6 +216,66 @@ header .admin-buttons a:hover {
 h1 {
   font-family: "Great Vibes", cursive;
   font-size: 3.5rem;
+}
+
+.login h3 {
+  font-size: 1.4rem;
+}
+
+.login form {
+  max-width: 480px;
+  width: 95%;
+  margin: 0 auto;
+}
+
+.login form input:not([type="submit"]) {
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 3px 5px;
+  margin-bottom: 20px;
+  border: 0;
+  border-bottom: 1px solid #e9a7c6;
+}
+
+form input[type="submit"] {
+  width: 100%;
+  border: 0;
+}
+
+@keyframes loading {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+}
+
+fieldset[disabled="true"] {
+  opacity: 0.5;
+}
+
+fieldset::before {
+  height: 10px;
+  content: "";
+  display: block;
+  background-image: linear-gradient(
+    to right,
+    #e9a7c6 0%,
+    #b3cde0 50%,
+    #e9a7c6 100%
+  );
+  margin-bottom: 20px;
+}
+
+fieldset[aria-busy="true"]::before {
+  background-size: 50% auto;
+  animation: loading 0.5s linear infinite;
 }
 
 .player-list {
@@ -253,4 +316,13 @@ h1 {
 
 p.loading {
   text-align: center;
+}
+
+p.error-message {
+  text-align: left;
+}
+
+p.error-message span {
+  font-weight: bold;
+  color: #923;
 }

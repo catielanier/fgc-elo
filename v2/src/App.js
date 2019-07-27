@@ -19,6 +19,10 @@ class App extends React.Component {
     });
   }
 
+  doLogin = user => {
+    this.setState({ user });
+  };
+
   render() {
     return (
       <div className="App">
@@ -26,7 +30,7 @@ class App extends React.Component {
           <Header user={this.state.user} />
           <main>
             <Route exact path="/" component={PlayerList} />
-            <Route path="/login" component={Login} />
+            <Route path="/login" component={Login} doLogin={this.doLogin} />
           </main>
         </Router>
       </div>
