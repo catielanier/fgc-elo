@@ -1,4 +1,5 @@
 import React from "react";
+import Flag from "react-world-flags";
 import firebase from "../firebase";
 
 class PlayerList extends React.Component {
