@@ -25,11 +25,11 @@ class Login extends React.Component {
       loading: true
     });
     const { email, password } = this.state;
+    let user = null;
     await auth
       .signInWithEmailAndPassword(email, password)
       .then(success => {
-        const { user } = success;
-        this.props.doLogin(user);
+        user = success.user;
         this.setState({
           success: true,
           loading: false
@@ -43,6 +43,9 @@ class Login extends React.Component {
           loading: false
         });
       });
+    if (!this.state.error) {
+      this.props.doLogin(user);
+    }
   };
 
   render() {

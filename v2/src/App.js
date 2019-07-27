@@ -23,14 +23,23 @@ class App extends React.Component {
     this.setState({ user });
   };
 
+  releaseUser = () => {
+    this.setState({
+      user: null
+    });
+  };
+
   render() {
     return (
       <div className="App">
         <Router>
-          <Header user={this.state.user} />
+          <Header user={this.state.user} releaseUser={this.releaseUser} />
           <main>
             <Route exact path="/" component={PlayerList} />
-            <Route path="/login" component={Login} doLogin={this.doLogin} />
+            <Route
+              path="/login"
+              component={() => <Login doLogin={this.doLogin} />}
+            />
           </main>
         </Router>
       </div>
