@@ -22,6 +22,72 @@ class AddTournament extends React.Component {
       loading: true
     });
     const playerList = this.state.playerList.split("\n");
+    const playerResults = [];
+
+    await playerList.map((player, index) => {
+      const res = {
+        name: player
+      };
+      if (index >= 0 && index < 4) {
+        res.place = index + 1;
+      }
+      if (index >= 4 && index < 6) {
+        res.place = 5;
+      }
+      if (index >= 6 && index < 8) {
+        res.place = 7;
+      }
+      if (index >= 8 && index < 12) {
+        res.place = 9;
+      }
+      if (index >= 12 && index < 16) {
+        res.place = 13;
+      }
+      if (index >= 16 && index < 24) {
+        res.place = 17;
+      }
+      if (index >= 24 && index < 32) {
+        res.place = 25;
+      }
+      if (index >= 32 && index < 48) {
+        res.place = 33;
+      }
+      if (index >= 48 && index < 64) {
+        res.place = 49;
+      }
+      if (index >= 64 && index < 96) {
+        res.place = 65;
+      }
+      if (index >= 96 && index < 128) {
+        res.place = 97;
+      }
+      if (index >= 128 && index < 192) {
+        res.place = 129;
+      }
+      if (index >= 192 && index < 256) {
+        res.place = 193;
+      }
+      if (index >= 256 && index < 384) {
+        res.place = 257;
+      }
+      if (index >= 384 && index < 512) {
+        res.place = 385;
+      }
+      if (index >= 512 && index < 768) {
+        res.place = 513;
+      }
+      if (index >= 768 && index < 1024) {
+        res.place = 769;
+      }
+      if (index >= 1024 && index < 1536) {
+        res.place = 1025;
+      }
+      if (index >= 1536 && index < 2048) {
+        res.place = 1537;
+      }
+      playerResults.push(res);
+    });
+
     const { tournamentName, bracketUrl, tournamentDate } = this.state;
     let bracketApi = null;
     const bracketSiteArray = ["challonge", "smash", "burningmeter"];
@@ -46,6 +112,59 @@ class AddTournament extends React.Component {
       }).then(res => {
         console.log(res);
       });
+    }
+
+    if (bracketApi === "burningmeter") {
+      let matches = null;
+      const tournamentId = bracketUrl;
+      await axios({
+        method: "get",
+        url: `${tournamentId}/s/bracket.json`,
+        header: {
+          "content-type": "text/plain"
+        }
+      }).then(res => {
+        matches = res.data.section.matches;
+      });
+      await axios({
+        method: "get",
+        url: `${tournamentId}/results.json`,
+        header: {
+          "content-type": "text/plain"
+        }
+      }).then(res => {
+        let { entrants } = res.data.tournament;
+        entrants = entrants.sort(function(x, y) {
+          return (
+            x.overall_placing - y.overall_placing ||
+            x.name.localeCompare(y.name)
+          );
+        });
+        entrants.map((entrant, index) => {
+          playerResults[index].id = entrant.id;
+        });
+      });
+      matches = matches.sort(function(x, y) {
+        return x.ended_at.localeCompare(y.ended_at);
+      });
+      matches.map(match => {
+        const index = playerResults.findIndex(
+          player => player.id === match.entrant_top_id
+        );
+        const index2 = playerResults.findIndex(
+          player => player.id === match.entrant_btm_id
+        );
+        console.log(index, index2);
+
+        if (index === -1 || index2 === -1) {
+          match.is_bye = true;
+        } else {
+          match.entrant_top_id = playerResults[index].name;
+          match.entrant_btm_id = playerResults[index2].name;
+          match.is_bye = false;
+        }
+      });
+      console.log(matches);
     }
     await this.setState({
       loading: false
