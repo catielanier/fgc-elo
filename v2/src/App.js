@@ -1,14 +1,22 @@
 import React from "react";
-import firebase from "./firebase";
+import firebase, { auth } from "./firebase";
 import Header from "./components/Header";
 import PlayerList from "./components/PlayerList";
 import "./App.css";
 
 class App extends React.Component {
   state = {
-    loggedIn: true,
-    userId: ""
+    user: null
   };
+
+  componentDidMount() {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ user });
+      }
+    });
+  }
+
   render() {
     return (
       <div className="App">
