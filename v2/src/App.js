@@ -1,8 +1,13 @@
 import React from "react";
-import Header from "./Components/Header";
+import firebase from "./firebase";
+import Header from "./components/Header";
 import "./App.css";
 
 class App extends React.Component {
+  state = {
+    loggedIn: true,
+    userId: ""
+  };
   render() {
     return (
       <div className="App">
