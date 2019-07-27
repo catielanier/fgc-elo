@@ -5,7 +5,7 @@ class Header extends React.Component {
   render() {
     return (
       <header>
-        {this.props.user === null && (
+        {!this.props.user && (
           <div className="admin-buttons">
             <Link to="/login">Login</Link>
           </div>
