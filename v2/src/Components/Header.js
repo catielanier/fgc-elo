@@ -5,7 +5,6 @@ import { auth } from "../firebase";
 class Header extends React.Component {
   doLogout = async e => {
     e.preventDefault();
-    console.log("signing out");
     auth.signOut().then(() => {
       this.props.releaseUser();
     });
@@ -21,6 +20,8 @@ class Header extends React.Component {
         )}
         {this.props.user && (
           <div className="admin-buttons">
+            <Link to="/">Leaderboard</Link>
+            <Link to="/add-tournament">Add Tournament</Link>
             <a href="#" onClick={this.doLogout}>
               Logout
             </a>
