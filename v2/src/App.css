@@ -237,6 +237,7 @@ h1 {
   width: 95%;
   margin: 0 auto;
   text-align: left;
+  margin-bottom: 30px;
 }
 
 form input:not([type="submit"]),

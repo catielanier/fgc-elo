@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 class AddTournament extends React.Component {
   state = {
@@ -14,9 +15,25 @@ class AddTournament extends React.Component {
     message: null
   };
 
-  submitTournament = e => {
+  submitTournament = async e => {
     e.preventDefault();
-    console.log("tournament submitted");
+    await this.setState({
+      loading: true
+    });
+    const playerList = this.state.playerList.split("\n");
+    const { tournamentName, bracketUrl, tournamentDate } = this.state;
+    let bracketApi = null;
+    const bracketSiteArray = ["challonge", "smash", "burningmeter"];
+    bracketSiteArray.forEach(site => {
+      const index = bracketUrl.indexOf(site);
+      if (index !== -1) {
+        bracketApi = site;
+      }
+    });
+    console.log(bracketApi);
+    await this.setState({
+      loading: false
+    });
   };
 
   changeState = e => {
@@ -38,7 +55,10 @@ class AddTournament extends React.Component {
       <section className="add-tournament">
         <h3>Add Tournament</h3>
         <form onSubmit={this.submitTournament}>
-          <fieldset>
+          <fieldset
+            aria-busy={this.state.loading}
+            disabled={this.state.loading}
+          >
             <label htmlFor="tournamentName">
               <p>Tournament Name:</p>{" "}
               <input
