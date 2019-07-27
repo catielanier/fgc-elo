@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { challongeKey } from "../apiKeys";
 
 class AddTournament extends React.Component {
   state = {
@@ -30,7 +31,22 @@ class AddTournament extends React.Component {
         bracketApi = site;
       }
     });
-    console.log(bracketApi);
+    if (bracketApi === "challonge") {
+      const tournamentId = bracketUrl.replace("https://challonge.com/", "");
+      console.log(challongeKey);
+      await axios({
+        method: "get",
+        url: `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json`,
+        params: {
+          api_key: challongeKey
+        },
+        header: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      }).then(res => {
+        console.log(res);
+      });
+    }
     await this.setState({
       loading: false
     });
