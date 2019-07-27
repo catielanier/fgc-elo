@@ -17,6 +17,11 @@ class PlayerList extends React.Component {
             <div>Tournament Score</div>
             <div>Ladder Rating</div>
           </div>
+          {this.state.loading && (
+            <div>
+              <p className="loading">Loading...</p>
+            </div>
+          )}
           {this.state.playerList.length === 0 && !this.state.loading && (
             <div>
               <p>There are currently no results.</p>

@@ -212,6 +212,9 @@ h1 {
 .grid-row.grid-header {
   background: #923;
   color: #f4c9a5;
+}
+
+.grid-header {
   font-weight: bold;
 }
 
@@ -222,4 +225,8 @@ h1 {
 
 .player-list .grid-container div > p {
   margin: 0;
+}
+
+p.loading {
+  text-align: center;
 }
