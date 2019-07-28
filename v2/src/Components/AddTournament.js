@@ -1,7 +1,9 @@
 import React from "react";
 import axios from "axios";
 import firebase from "../firebase";
+import findPlace from "./findPlace";
 import { challongeKey } from "../apiKeys";
+import tournamentPoints from "./tournamentPoints";
 
 class AddTournament extends React.Component {
   state = {
@@ -18,9 +20,9 @@ class AddTournament extends React.Component {
     playersinDB: []
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.dbRefPlayers = firebase.database().ref("players/");
-    this.dbRefPlayers.on("value", snapshot => {
+    await this.dbRefPlayers.on("value", async snapshot => {
       const playersInDB = [];
       const data = snapshot.val();
       for (let key in data) {
@@ -34,7 +36,7 @@ class AddTournament extends React.Component {
           gameLosses: data[key].gameLosses || 0
         });
       }
-      this.setState({
+      await this.setState({
         playersInDB
       });
     });
@@ -48,67 +50,15 @@ class AddTournament extends React.Component {
     const playerList = this.state.playerList.split("\n");
     const playerResults = [];
 
+    const players = this.state.playersinDB;
+
     await playerList.map((player, index) => {
       const res = {
         name: player
       };
-      if (index >= 0 && index < 4) {
-        res.place = index + 1;
-      }
-      if (index >= 4 && index < 6) {
-        res.place = 5;
-      }
-      if (index >= 6 && index < 8) {
-        res.place = 7;
-      }
-      if (index >= 8 && index < 12) {
-        res.place = 9;
-      }
-      if (index >= 12 && index < 16) {
-        res.place = 13;
-      }
-      if (index >= 16 && index < 24) {
-        res.place = 17;
-      }
-      if (index >= 24 && index < 32) {
-        res.place = 25;
-      }
-      if (index >= 32 && index < 48) {
-        res.place = 33;
-      }
-      if (index >= 48 && index < 64) {
-        res.place = 49;
-      }
-      if (index >= 64 && index < 96) {
-        res.place = 65;
-      }
-      if (index >= 96 && index < 128) {
-        res.place = 97;
-      }
-      if (index >= 128 && index < 192) {
-        res.place = 129;
-      }
-      if (index >= 192 && index < 256) {
-        res.place = 193;
-      }
-      if (index >= 256 && index < 384) {
-        res.place = 257;
-      }
-      if (index >= 384 && index < 512) {
-        res.place = 385;
-      }
-      if (index >= 512 && index < 768) {
-        res.place = 513;
-      }
-      if (index >= 768 && index < 1024) {
-        res.place = 769;
-      }
-      if (index >= 1024 && index < 1536) {
-        res.place = 1025;
-      }
-      if (index >= 1536 && index < 2048) {
-        res.place = 1537;
-      }
+
+      res.place = findPlace(index);
+
       playerResults.push(res);
     });
 
@@ -171,8 +121,7 @@ class AddTournament extends React.Component {
       matches = matches.sort(function(x, y) {
         return x.ordering - y.ordering;
       });
-      console.log(matches);
-      matches.map(match => {
+      await matches.map(match => {
         const index = playerResults.findIndex(
           player => player.id === match.entrant_top_id
         );
@@ -193,30 +142,31 @@ class AddTournament extends React.Component {
         }
       });
 
-      matches.map(async match => {
+      await matches.map(async match => {
         if (match.is_bye === false) {
-          const dbIndex = this.state.playersInDB.findIndex(
+          const dbIndex = players.findIndex(
             player => player.name === match.entrant_top_id
           );
-          const dbIndex2 = this.state.playersInDB.findIndex(
+          const dbIndex2 = players.findIndex(
             player => player.name === match.entrant_btm_id
           );
-          console.log(dbIndex, dbIndex2);
-          const playerOne = this.state.playersInDB[dbIndex] || {
+          const playerOne = players[dbIndex] || {
             name: match.entrant_top_id,
             elo: 1200,
             matchWins: 0,
             matchLosses: 0,
             gameWins: 0,
-            gameLosses: 0
+            gameLosses: 0,
+            tournamentScore: 0
           };
-          const playerTwo = this.state.playersInDB[dbIndex2] || {
+          const playerTwo = players[dbIndex2] || {
             name: match.entrant_btm_id,
             elo: 1200,
             matchWins: 0,
             matchLosses: 0,
             gameWins: 0,
-            gameLosses: 0
+            gameLosses: 0,
+            tournamentScore: 0
           };
 
           if (playerOne.name === match.winner_id) {
@@ -274,25 +224,39 @@ class AddTournament extends React.Component {
             }
           }
 
-          if (playerOne.key === undefined) {
-            this.dbRefPlayers.push(playerOne);
-          } else if (playerOne.key !== undefined) {
-            this.dbRefPlayer = firebase
-              .database()
-              .ref(`players/${playerOne.key}`);
-            delete playerOne.key;
-            this.dbRefPlayer.set(playerOne);
+          if (dbIndex === -1) {
+            players.push(playerOne);
+          } else {
+            players[dbIndex] = playerOne;
           }
 
-          if (playerTwo.key === undefined) {
-            this.dbRefPlayers.push(playerTwo);
-          } else if (playerTwo.key !== undefined) {
-            this.dbRefPlayer = firebase
-              .database()
-              .ref(`players/${playerTwo.key}`);
-            delete playerTwo.key;
-            this.dbRefPlayer.set(playerTwo);
+          if (dbIndex2 === -1) {
+            players.push(playerTwo);
+          } else {
+            players[dbIndex2] = playerTwo;
           }
+        }
+      });
+
+      await playerResults.map(async player => {
+        const playerIndex = players.findIndex(p => p.name === player.name);
+
+        players[playerIndex].tournamentScore = tournamentPoints(
+          player.place,
+          players[playerIndex].tournamentScore
+        );
+        console.log(player.place);
+
+        console.log(players[playerIndex].tournamentScore);
+      });
+
+      players.forEach(player => {
+        if (!player.key) {
+          this.dbRefPlayers.push(player);
+        } else {
+          this.dbRefPlayer = firebase.database().ref(`players/${player.key}`);
+          delete player.key;
+          this.dbRefPlayer.set(player);
         }
       });
     }
