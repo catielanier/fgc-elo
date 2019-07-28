@@ -272,7 +272,7 @@ class AddTournament extends React.Component {
     });
   };
 
-  changeBoolean = e => {
+  changeBoolean = () => {
     const paperBracket = !this.state.paperBracket;
     this.setState({
       paperBracket
