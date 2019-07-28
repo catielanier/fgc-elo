@@ -50,7 +50,10 @@ class App extends React.Component {
               path="/player/:key"
               component={() => <Player user={this.state.user} />}
             />
-            <Route path="/edit-player/:key" component={EditPlayer} />
+            <Route
+              path="/edit-player/:key"
+              component={() => <EditPlayer user={this.state.user} />}
+            />
           </main>
         </Router>
       </div>

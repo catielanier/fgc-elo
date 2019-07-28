@@ -316,6 +316,16 @@ fieldset[aria-busy="true"]::before {
   margin-top: 50px;
 }
 
+.edit-player form {
+  max-width: 560px;
+  width: 95%;
+  margin: 50px auto;
+}
+
+.edit-player fieldset {
+  text-align: left;
+}
+
 .player-list .grid-container {
   display: grid;
   grid-auto-rows: 1fr;
@@ -372,7 +382,14 @@ p.error-message span {
   color: #923;
 }
 
+.player {
+  width: 70%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
 .player .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  text-align: left;
 }
