@@ -1,5 +1,6 @@
 import React from "react";
 import Flag from "react-world-flags";
+import { Link } from "react-router-dom";
 import firebase from "../firebase";
 
 class PlayerList extends React.Component {
@@ -96,13 +97,15 @@ class PlayerList extends React.Component {
           {this.state.playerList.length > 0 &&
             this.state.playerList.map((player, index) => {
               return (
-                <div className="grid-row" key={player.key}>
-                  <div className="grid-header">{index + 1}</div>
-                  <div>{player.name}</div>
-                  <div>{player.character ? player.character : null}</div>
-                  <div>{player.tournamentScore}</div>
-                  <div>{player.elo}</div>
-                </div>
+                <Link to={`player/${player.key}`} key={player.key}>
+                  <div className="grid-row">
+                    <div className="grid-header">{index + 1}</div>
+                    <div>{player.name}</div>
+                    <div>{player.character ? player.character : null}</div>
+                    <div>{player.tournamentScore}</div>
+                    <div>{player.elo}</div>
+                  </div>
+                </Link>
               );
             })}
         </div>

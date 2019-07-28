@@ -199,7 +199,8 @@ header .admin-buttons a:not(:last-of-type) {
 }
 
 header .admin-buttons a,
-form input[type="submit"] {
+form input[type="submit"],
+.admin-button {
   display: inline-block;
   text-decoration: none;
   background: #923;
@@ -212,7 +213,8 @@ form input[type="submit"] {
 }
 
 header .admin-buttons a:hover,
-form input[type="submit"]:hover {
+form input[type="submit"]:hover,
+.admin-button:hover {
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
   background: #8a1b2a;
 }
@@ -321,11 +323,22 @@ fieldset[aria-busy="true"]::before {
   max-width: 680px;
   margin: 0 auto;
   text-align: left;
+  margin-bottom: 50px;
 }
 
 .player-list .grid-container .grid-row {
   display: grid;
   grid-template-columns: 7% 47% 12% 19% 15%;
+}
+
+.player-list .grid-container a {
+  text-decoration: none;
+  color: #000;
+}
+
+select[name="sorting"] {
+  margin-bottom: 25px;
+  margin-left: 10px;
 }
 
 .grid-row.grid-header {
@@ -357,4 +370,9 @@ p.error-message {
 p.error-message span {
   font-weight: bold;
   color: #923;
+}
+
+.player .grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }

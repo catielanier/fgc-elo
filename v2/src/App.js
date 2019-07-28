@@ -6,6 +6,8 @@ import AddTournament from "./components/AddTournament";
 import AddPlayer from "./components/AddPlayer";
 import PlayerList from "./components/PlayerList";
 import Login from "./components/Login";
+import Player from "./components/Player";
+import EditPlayer from "./components/EditPlayer";
 import "./App.css";
 
 class App extends React.Component {
@@ -44,6 +46,11 @@ class App extends React.Component {
             />
             <Route path="/add-tournament" component={AddTournament} />
             <Route path="/add-player" component={AddPlayer} />
+            <Route
+              path="/player/:key"
+              component={() => <Player user={this.state.user} />}
+            />
+            <Route path="/edit-player/:key" component={EditPlayer} />
           </main>
         </Router>
       </div>
