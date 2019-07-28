@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { auth } from "./firebase";
 import Header from "./components/Header";
 import AddTournament from "./components/AddTournament";
+import AddPlayer from "./components/AddPlayer";
 import PlayerList from "./components/PlayerList";
 import Login from "./components/Login";
 import "./App.css";
@@ -42,6 +43,7 @@ class App extends React.Component {
               component={() => <Login doLogin={this.doLogin} />}
             />
             <Route path="/add-tournament" component={AddTournament} />
+            <Route path="/add-player" component={AddPlayer} />
           </main>
         </Router>
       </div>

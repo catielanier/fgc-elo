@@ -22,6 +22,7 @@ class Header extends React.Component {
           <div className="admin-buttons">
             <Link to="/">Leaderboard</Link>
             <Link to="/add-tournament">Add Tournament</Link>
+            <Link to="/add-player">Add Player</Link>
             <a href="#" onClick={this.doLogout}>
               Logout
             </a>

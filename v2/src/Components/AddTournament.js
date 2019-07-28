@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import firebase from "../firebase";
 import { challongeKey } from "../apiKeys";
 
 class AddTournament extends React.Component {
@@ -13,8 +14,31 @@ class AddTournament extends React.Component {
     loading: false,
     success: false,
     error: false,
-    message: null
+    message: null,
+    playersinDB: []
   };
+
+  componentDidMount() {
+    this.dbRefPlayers = firebase.database().ref("players/");
+    this.dbRefPlayers.on("value", snapshot => {
+      const playersInDB = [];
+      const data = snapshot.val();
+      for (let key in data) {
+        playersInDB.push({
+          key,
+          name: data[key].name,
+          elo: data[key].elo || 1200,
+          matchWins: data[key].matchWins || 0,
+          matchLosses: data[key].matchLosses || 0,
+          gameWins: data[key].gameWins || 0,
+          gameLosses: data[key].gameLosses || 0
+        });
+      }
+      this.setState({
+        playersInDB
+      });
+    });
+  }
 
   submitTournament = async e => {
     e.preventDefault();
@@ -145,8 +169,9 @@ class AddTournament extends React.Component {
         });
       });
       matches = matches.sort(function(x, y) {
-        return x.ended_at.localeCompare(y.ended_at);
+        return x.ordering - y.ordering;
       });
+      console.log(matches);
       matches.map(match => {
         const index = playerResults.findIndex(
           player => player.id === match.entrant_top_id
@@ -154,19 +179,124 @@ class AddTournament extends React.Component {
         const index2 = playerResults.findIndex(
           player => player.id === match.entrant_btm_id
         );
-        console.log(index, index2);
+        const index3 = playerResults.findIndex(
+          player => player.id === match.winner_id
+        );
 
         if (index === -1 || index2 === -1) {
           match.is_bye = true;
         } else {
           match.entrant_top_id = playerResults[index].name;
           match.entrant_btm_id = playerResults[index2].name;
+          match.winner_id = playerResults[index3].name;
           match.is_bye = false;
         }
       });
-      console.log(matches);
+
+      matches.map(async match => {
+        if (match.is_bye === false) {
+          const dbIndex = this.state.playersInDB.findIndex(
+            player => player.name === match.entrant_top_id
+          );
+          const dbIndex2 = this.state.playersInDB.findIndex(
+            player => player.name === match.entrant_btm_id
+          );
+          console.log(dbIndex, dbIndex2);
+          const playerOne = this.state.playersInDB[dbIndex] || {
+            name: match.entrant_top_id,
+            elo: 1200,
+            matchWins: 0,
+            matchLosses: 0,
+            gameWins: 0,
+            gameLosses: 0
+          };
+          const playerTwo = this.state.playersInDB[dbIndex2] || {
+            name: match.entrant_btm_id,
+            elo: 1200,
+            matchWins: 0,
+            matchLosses: 0,
+            gameWins: 0,
+            gameLosses: 0
+          };
+
+          if (playerOne.name === match.winner_id) {
+            playerOne.matchWins = playerOne.matchWins + 1;
+            playerTwo.matchLosses = playerTwo.matchLosses + 1;
+            const playerOneOriginalELO = playerOne.elo;
+            const playerTwoOriginalELO = playerTwo.elo;
+            const playerOneTransELO = Math.pow(10, playerOneOriginalELO / 400);
+            const playerTwoTransELO = Math.pow(10, playerTwoOriginalELO / 400);
+            const playerOneExpectedScore =
+              playerOneTransELO / (playerOneTransELO + playerTwoTransELO);
+            const playerTwoExpectedScore =
+              playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
+            const playerOneUpdatedELO = Math.round(
+              playerOneOriginalELO + 32 * (1 - playerOneExpectedScore)
+            );
+            const playerTwoUpdatedELO = Math.round(
+              playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore)
+            );
+            playerOne.elo = playerOneUpdatedELO;
+            playerTwo.elo = playerTwoUpdatedELO;
+          } else {
+            playerTwo.matchWins = playerTwo.matchWins + 1;
+            playerOne.matchLosses = playerOne.matchLosses + 1;
+            const playerOneOriginalELO = playerOne.elo;
+            const playerTwoOriginalELO = playerTwo.elo;
+            const playerOneTransELO = Math.pow(10, playerOneOriginalELO / 400);
+            const playerTwoTransELO = Math.pow(10, playerTwoOriginalELO / 400);
+            const playerOneExpectedScore =
+              playerOneTransELO / (playerOneTransELO + playerTwoTransELO);
+            const playerTwoExpectedScore =
+              playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
+            const playerTwoUpdatedELO = Math.round(
+              playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore)
+            );
+            const playerOneUpdatedELO = Math.round(
+              playerOneOriginalELO + 32 * (0 - playerOneExpectedScore)
+            );
+            playerOne.elo = playerOneUpdatedELO;
+            playerTwo.elo = playerTwoUpdatedELO;
+          }
+
+          if (match.entrant_top_points && match.entrant_top_points !== 0) {
+            playerOne.gameWins = playerOne.gameWins + match.entrant_top_points;
+            if (match.entrant_btm_points && match.entrant_btm_points !== 0) {
+              playerOne.gameLosses =
+                playerOne.gameLosses + match.entrant_btm_points;
+            }
+          }
+          if (match.entrant_btm_points && match.entrant_btm_points !== 0) {
+            playerTwo.gameWins = playerTwo.gameWins + match.entrant_btm_points;
+            if (match.entrant_top_points && match.entrant_top_points !== 0) {
+              playerTwo.gameLosses =
+                playerTwo.gameLosses + match.entrant_top_points;
+            }
+          }
+
+          if (playerOne.key === undefined) {
+            this.dbRefPlayers.push(playerOne);
+          } else if (playerOne.key !== undefined) {
+            this.dbRefPlayer = firebase
+              .database()
+              .ref(`players/${playerOne.key}`);
+            delete playerOne.key;
+            this.dbRefPlayer.set(playerOne);
+          }
+
+          if (playerTwo.key === undefined) {
+            this.dbRefPlayers.push(playerTwo);
+          } else if (playerTwo.key !== undefined) {
+            this.dbRefPlayer = firebase
+              .database()
+              .ref(`players/${playerTwo.key}`);
+            delete playerTwo.key;
+            this.dbRefPlayer.set(playerTwo);
+          }
+        }
+      });
     }
-    await this.setState({
+    this.setState({
       loading: false
     });
   };
