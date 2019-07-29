@@ -1,10 +1,15 @@
 import React from "react";
+import Select from "react-select";
 import firebase from "../firebase";
+import countries from "./countries";
+import characters from "./characters";
 
 class EditPlayer extends React.Component {
   state = {
     key: "",
     realName: "",
+    character: "",
+    characterShort: "",
     country: "",
     controller: "",
     team: "",
@@ -32,6 +37,8 @@ class EditPlayer extends React.Component {
         mixer,
         teamShort,
         countryLong,
+        character,
+        characterShort,
         imageUrl
       } = data;
       this.setState({
@@ -40,6 +47,8 @@ class EditPlayer extends React.Component {
         realName: realName || "",
         country: country || "",
         controller: controller || "",
+        characterShort: characterShort || "",
+        character: character || "",
         team: team || "",
         twitter: twitter || "",
         twitch: twitch || "",
@@ -58,14 +67,36 @@ class EditPlayer extends React.Component {
     });
   };
 
+  setCountry = e => {
+    const { value, label } = e;
+
+    this.setState({
+      country: value,
+      countryLong: label
+    });
+  };
+
+  setCharacter = e => {
+    const { value, label } = e;
+    this.setState({
+      character: label,
+      characterShort: value
+    });
+  };
+
   uploadPhoto = e => {
     console.log("uploading photo");
+  };
+
+  editPlayer = e => {
+    e.preventDefault();
+    console.log("submitting form");
   };
 
   render() {
     return (
       <section className="edit-player">
-        <form>
+        <form onSubmit={this.editPlayer}>
           <h3>Edit {this.state.name}</h3>
           <fieldset>
             <label htmlFor="realName">
@@ -80,9 +111,11 @@ class EditPlayer extends React.Component {
             </label>
             <label htmlFor="country">
               <p>Country</p>
-              <select name="country">
-                <option value="">Select a country</option>
-              </select>
+              <Select onChange={this.setCountry} options={countries} />
+            </label>
+            <label htmlFor="character">
+              <p>Main Character:</p>
+              <Select options={characters} onChange={this.setCharacter} />
             </label>
             <label htmlFor="team">
               <p>Team Name:</p>
