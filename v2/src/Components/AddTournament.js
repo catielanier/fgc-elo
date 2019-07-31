@@ -256,7 +256,7 @@ class AddTournament extends React.Component {
         } else {
           this.dbRefPlayer = firebase.database().ref(`players/${player.key}`);
           delete player.key;
-          this.dbRefPlayer.set(player);
+          this.dbRefPlayer.update(player);
         }
       });
     }

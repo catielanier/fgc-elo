@@ -64,7 +64,9 @@ class Player extends React.Component {
             <h3>{this.state.player.name}</h3>
             <div className="profile-grid">
               <div className="profile-header">Real Name:</div>
-              <div className="profile-answer">Russell Ordona</div>
+              <div className="profile-answer">
+                {this.state.player.realName || "Unknown"}
+              </div>
               <div className="profile-header">Country:</div>
               <div className="profile-answer">
                 {this.state.player.country && this.state.player.country !== "" && (

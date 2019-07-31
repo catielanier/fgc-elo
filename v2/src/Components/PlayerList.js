@@ -2,6 +2,15 @@ import React from "react";
 import Flag from "react-world-flags";
 import { Link } from "react-router-dom";
 import firebase from "../firebase";
+import moon from "../assets/moon.png";
+import pluto from "../assets/pluto.png";
+import uranus from "../assets/uranus.png";
+import venus from "../assets/venus.png";
+import mars from "../assets/mars.png";
+import mercury from "../assets/mercury.png";
+import chibi from "../assets/chibi.png";
+import jupiter from "../assets/jupiter.png";
+import neptune from "../assets/neptune.png";
 
 class PlayerList extends React.Component {
   state = {
@@ -16,11 +25,27 @@ class PlayerList extends React.Component {
     this.dbRefPlayers = firebase.database().ref("players/");
     let playerList = [];
     await this.dbRefPlayers.on("value", snapshot => {
+      const characterObject = {
+        moon: moon,
+        mercury: mercury,
+        jupiter: jupiter,
+        mars: mars,
+        venus: venus,
+        uranus: uranus,
+        pluto: pluto,
+        neptune: neptune,
+        chibi: chibi
+      };
       const data = snapshot.val();
       for (let key in data) {
+        let characterUrl = null;
+        if (data[key].characterShort && data[key].characterShort !== "") {
+          characterUrl = characterObject[data[key].characterShort];
+        }
         playerList.push({
           key,
-          ...data[key]
+          ...data[key],
+          characterUrl
         });
       }
       playerList.sort(function(x, y) {
@@ -100,8 +125,22 @@ class PlayerList extends React.Component {
                 <Link to={`player/${player.key}`} key={player.key}>
                   <div className="grid-row">
                     <div className="grid-header">{index + 1}</div>
-                    <div>{player.name}</div>
-                    <div>{player.character ? player.character : null}</div>
+                    <div>
+                      {player.country && player.country !== "" && (
+                        <Flag code={player.country} height="16" />
+                      )}
+                      &nbsp;
+                      {player.name}
+                    </div>
+                    <div>
+                      {player.character && player.character !== "" ? (
+                        <img
+                          src={player.characterUrl}
+                          alt={player.character}
+                          height="16"
+                        />
+                      ) : null}
+                    </div>
                     <div>{player.tournamentScore}</div>
                     <div>{player.elo}</div>
                   </div>
