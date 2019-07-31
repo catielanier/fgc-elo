@@ -369,6 +369,11 @@ select[name="sorting"] {
   margin: 0;
 }
 
+span.team {
+  font-weight: bold;
+  color: #49ade2;
+}
+
 p.loading {
   text-align: center;
 }

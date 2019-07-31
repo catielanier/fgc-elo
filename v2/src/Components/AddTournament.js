@@ -73,18 +73,34 @@ class AddTournament extends React.Component {
     });
     if (bracketApi === "challonge") {
       const tournamentId = bracketUrl.replace("https://challonge.com/", "");
-      console.log(challongeKey);
+
       await axios({
         method: "get",
-        url: `https://api.challonge.com/v1/tournaments/${tournamentId}/matches.json`,
+        url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}/matches.json`,
         params: {
           api_key: challongeKey
-        },
-        header: {
-          "Access-Control-Allow-Origin": "*"
         }
       }).then(res => {
         console.log(res);
+      });
+
+      await axios({
+        method: "get",
+        url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}.json`,
+        params: {
+          api_key: challongeKey,
+          include_participants: "1"
+        }
+      }).then(res => {
+        let { participants } = res.data.tournament;
+
+        participants.sort(function(x, y) {
+          return (
+            x.participant.final_rank - y.participant.final_rank ||
+            x.participant.seed - y.participant.seed
+          );
+        });
+        console.log(participants);
       });
     }
 

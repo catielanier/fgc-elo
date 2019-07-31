@@ -11,6 +11,7 @@ import mercury from "../assets/mercury.png";
 import chibi from "../assets/chibi.png";
 import jupiter from "../assets/jupiter.png";
 import neptune from "../assets/neptune.png";
+import { spawn } from "child_process";
 
 class PlayerList extends React.Component {
   state = {
@@ -50,7 +51,9 @@ class PlayerList extends React.Component {
       }
       playerList.sort(function(x, y) {
         return (
-          y.tournamentScore - x.tournamentScore || x.name.localeCompare(y.name)
+          y.tournamentScore - x.tournamentScore ||
+          y.elo - x.elo ||
+          x.name.localeCompare(y.name)
         );
       });
       this.setState({
@@ -128,6 +131,10 @@ class PlayerList extends React.Component {
                     <div>
                       {player.country && player.country !== "" && (
                         <Flag code={player.country} height="16" />
+                      )}
+                      &nbsp;
+                      {player.teamShort && player.teamShort !== "" && (
+                        <span className="team">{player.teamShort}</span>
                       )}
                       &nbsp;
                       {player.name}

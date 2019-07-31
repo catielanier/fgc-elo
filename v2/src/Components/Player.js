@@ -35,7 +35,6 @@ class Player extends React.Component {
     await this.dbRefPlayer.on("value", async snapshot => {
       const player = snapshot.val();
       player.key = key;
-      console.log(player);
       let characterUrl = null;
       if (player.characterShort && player.characterShort !== "") {
         characterUrl = characterObject[player.characterShort];
