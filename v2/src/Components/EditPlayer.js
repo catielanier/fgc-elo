@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import { Redirect } from "react-router-dom";
 import firebase from "../firebase";
 import countries from "./countries";
 import characters from "./characters";
@@ -18,7 +19,9 @@ class EditPlayer extends React.Component {
     mixer: "",
     countryLong: "",
     teamShort: "",
-    imageUrl: ""
+    imageUrl: "",
+    loading: false,
+    success: false
   };
 
   componentDidMount() {
@@ -84,16 +87,72 @@ class EditPlayer extends React.Component {
     });
   };
 
-  uploadPhoto = e => {
-    console.log("uploading photo");
+  uploadPhoto = async e => {
+    const { files } = e.target;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "sms-elo");
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/ddowroi3m/image/upload",
+      {
+        method: "POST",
+        body: data
+      }
+    );
+
+    const file = await res.json();
+
+    this.setState({
+      imageUrl: file.secure_url
+    });
   };
 
-  editPlayer = e => {
+  editPlayer = async e => {
     e.preventDefault();
-    console.log("submitting form");
+    await this.setState({
+      loading: true
+    });
+    this.dbRefPlayer = firebase.database().ref(`players/${this.state.key}`);
+    const {
+      realName,
+      country,
+      controller,
+      team,
+      twitter,
+      twitch,
+      mixer,
+      teamShort,
+      countryLong,
+      character,
+      characterShort,
+      imageUrl
+    } = this.state;
+
+    const player = {
+      realName,
+      country,
+      controller,
+      team,
+      twitter,
+      twitch,
+      mixer,
+      teamShort,
+      countryLong,
+      character,
+      characterShort,
+      imageUrl
+    };
+    await this.dbRefPlayer.update(player);
+    await this.setState({
+      loading: false,
+      success: true
+    });
   };
 
   render() {
+    if (this.state.success) {
+      return <Redirect to={`/player/${this.state.key}`} />;
+    }
     return (
       <section className="edit-player">
         <form onSubmit={this.editPlayer}>

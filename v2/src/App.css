@@ -384,12 +384,37 @@ p.error-message span {
 
 .player {
   width: 70%;
-  max-width: 1280px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
 .player .grid-container {
   display: grid;
+  margin: 50px auto;
   grid-template-columns: repeat(2, 1fr);
+  grid-gap: 30px;
   text-align: left;
+}
+
+.player .profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 15px;
+}
+
+.player .grid-container h3 {
+  font-size: 1.5rem;
+}
+
+.profile-grid .profile-header {
+  font-weight: bold;
+}
+
+.profile-grid .profile-answer a {
+  text-decoration: none;
+  color: #923;
+}
+
+.player .grid-container .player-picture img {
+  width: 100%;
 }
