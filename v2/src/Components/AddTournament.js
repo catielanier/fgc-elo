@@ -4,6 +4,7 @@ import firebase from "../firebase";
 import findPlace from "./findPlace";
 import { challongeKey } from "../apiKeys";
 import tournamentPoints from "./tournamentPoints";
+import calculateElo from "./calculateElo";
 
 class AddTournament extends React.Component {
   state = {
@@ -64,6 +65,18 @@ class AddTournament extends React.Component {
 
     const { tournamentName, bracketUrl, tournamentDate } = this.state;
     let bracketApi = null;
+    let matches = null;
+    class Player {
+      constructor() {
+        this.name = null;
+        this.elo = 1200;
+        this.matchWins = 0;
+        this.matchLosses = 0;
+        this.gameWins = 0;
+        this.gameLosses = 0;
+        this.tournamentScore = 0;
+      }
+    }
     const bracketSiteArray = ["challonge", "smash", "burningmeter"];
     bracketSiteArray.forEach(site => {
       const index = bracketUrl.indexOf(site);
@@ -81,8 +94,10 @@ class AddTournament extends React.Component {
           api_key: challongeKey
         }
       }).then(res => {
-        console.log(res);
+        matches = res.data;
       });
+
+      console.log(matches);
 
       await axios({
         method: "get",
@@ -100,12 +115,71 @@ class AddTournament extends React.Component {
             x.participant.seed - y.participant.seed
           );
         });
-        console.log(participants);
+        participants.map((participant, index) => {
+          playerResults[index].id = participant.participant.id;
+        });
+      });
+      await matches.map(match => {
+        const index = playerResults.findIndex(
+          player => match.match.player1_id === player.id
+        );
+        const index2 = playerResults.findIndex(
+          player => match.match.player2_id === player.id
+        );
+        const index3 = playerResults.findIndex(
+          player => match.match.winner_id === player.id
+        );
+
+        if (index !== -1 && index2 !== -1) {
+          match.match.player1_id = playerResults[index].name;
+          match.match.player2_id = playerResults[index2].name;
+          match.match.winner_id = playerResults[index3].name;
+        }
+        const scoreIndex = match.match.scores_csv.indexOf("-");
+        const scoreLength = match.match.scores_csv.length;
+
+        let player1_score = null;
+        let player2_score = null;
+
+        if (scoreIndex === 1 && scoreLength === 3) {
+          player1_score = parseInt(
+            match.match.scores_csv
+              .substring(0, scoreLength - 1)
+              .replace("-", "")
+          );
+          player2_score = parseInt(match.match.scores_csv[scoreLength - 1]);
+        }
+        if (
+          match.match.scores_csv.indexOf("-1") === 0 ||
+          match.match.scores_csv.indexOf("--1") === 1
+        ) {
+          match.match.is_dq = true;
+        }
+        match.match.player1_score = player1_score;
+        match.match.player2_score = player2_score;
+        console.log(match.match);
+      });
+
+      await matches.map(async match => {
+        const dbIndex = players.findIndex(
+          player => player.name === match.match.player1_id
+        );
+        const dbIndex2 = players.findIndex(
+          player => player.name === match.match.player2_id
+        );
+
+        const playerOne = players[dbIndex] || new Player();
+        if (!playerOne.name) {
+          playerOne.name = match.match.player1_id;
+        }
+        const playerTwo = players[dbIndex2] || new Player();
+        if (!playerTwo.name) {
+          playerTwo.name = match.match.player2_id;
+        }
       });
     }
 
     if (bracketApi === "burningmeter") {
-      let matches = null;
       const tournamentId = bracketUrl;
       await axios({
         method: "get",
@@ -166,64 +240,16 @@ class AddTournament extends React.Component {
           const dbIndex2 = players.findIndex(
             player => player.name === match.entrant_btm_id
           );
-          const playerOne = players[dbIndex] || {
-            name: match.entrant_top_id,
-            elo: 1200,
-            matchWins: 0,
-            matchLosses: 0,
-            gameWins: 0,
-            gameLosses: 0,
-            tournamentScore: 0
-          };
-          const playerTwo = players[dbIndex2] || {
-            name: match.entrant_btm_id,
-            elo: 1200,
-            matchWins: 0,
-            matchLosses: 0,
-            gameWins: 0,
-            gameLosses: 0,
-            tournamentScore: 0
-          };
-
-          if (playerOne.name === match.winner_id) {
-            playerOne.matchWins = playerOne.matchWins + 1;
-            playerTwo.matchLosses = playerTwo.matchLosses + 1;
-            const playerOneOriginalELO = playerOne.elo;
-            const playerTwoOriginalELO = playerTwo.elo;
-            const playerOneTransELO = Math.pow(10, playerOneOriginalELO / 400);
-            const playerTwoTransELO = Math.pow(10, playerTwoOriginalELO / 400);
-            const playerOneExpectedScore =
-              playerOneTransELO / (playerOneTransELO + playerTwoTransELO);
-            const playerTwoExpectedScore =
-              playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
-            const playerOneUpdatedELO = Math.round(
-              playerOneOriginalELO + 32 * (1 - playerOneExpectedScore)
-            );
-            const playerTwoUpdatedELO = Math.round(
-              playerTwoOriginalELO + 32 * (0 - playerTwoExpectedScore)
-            );
-            playerOne.elo = playerOneUpdatedELO;
-            playerTwo.elo = playerTwoUpdatedELO;
-          } else {
-            playerTwo.matchWins = playerTwo.matchWins + 1;
-            playerOne.matchLosses = playerOne.matchLosses + 1;
-            const playerOneOriginalELO = playerOne.elo;
-            const playerTwoOriginalELO = playerTwo.elo;
-            const playerOneTransELO = Math.pow(10, playerOneOriginalELO / 400);
-            const playerTwoTransELO = Math.pow(10, playerTwoOriginalELO / 400);
-            const playerOneExpectedScore =
-              playerOneTransELO / (playerOneTransELO + playerTwoTransELO);
-            const playerTwoExpectedScore =
-              playerTwoTransELO / (playerTwoTransELO + playerOneTransELO);
-            const playerTwoUpdatedELO = Math.round(
-              playerTwoOriginalELO + 32 * (1 - playerTwoExpectedScore)
-            );
-            const playerOneUpdatedELO = Math.round(
-              playerOneOriginalELO + 32 * (0 - playerOneExpectedScore)
-            );
-            playerOne.elo = playerOneUpdatedELO;
-            playerTwo.elo = playerTwoUpdatedELO;
+          const playerOne = players[dbIndex] || new Player();
+          if (!playerOne.name) {
+            playerOne.name = match.entrant_top_id;
           }
+          const playerTwo = players[dbIndex2] || new Player();
+          if (!playerTwo.name) {
+            playerTwo.name = match.entrant_btm_id;
+          }
+
+          calculateElo(playerOne, playerTwo, match);
 
           if (match.entrant_top_points && match.entrant_top_points !== 0) {
             playerOne.gameWins = playerOne.gameWins + match.entrant_top_points;
@@ -261,9 +287,6 @@ class AddTournament extends React.Component {
           player.place,
           players[playerIndex].tournamentScore
         );
-        console.log(player.place);
-
-        console.log(players[playerIndex].tournamentScore);
       });
 
       players.forEach(player => {

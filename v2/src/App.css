@@ -341,9 +341,22 @@ fieldset[aria-busy="true"]::before {
   grid-template-columns: 7% 47% 12% 19% 15%;
 }
 
+.player-list .grid-container a:nth-of-type(2n + 2) {
+  background: #f3e0e9;
+}
+
+.player-list .grid-container a:hover {
+  background: #e9a7c6;
+}
+
+.player-list .grid-container a:hover .grid-row div {
+  border: 1px solid #fff;
+}
+
 .player-list .grid-container a {
   text-decoration: none;
   color: #000;
+  transition: all 0.3s ease-in-out;
 }
 
 select[name="sorting"] {
@@ -363,6 +376,7 @@ select[name="sorting"] {
 .grid-row > div {
   padding: 5px 7px;
   border: 1px solid #e9a7c6;
+  transition: 0.3s all ease-in-out;
 }
 
 .player-list .grid-container div > p {
