@@ -97,8 +97,6 @@ class AddTournament extends React.Component {
         matches = res.data;
       });
 
-      console.log(matches);
-
       await axios({
         method: "get",
         url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}.json`,
@@ -285,7 +283,8 @@ class AddTournament extends React.Component {
 
         players[playerIndex].tournamentScore = tournamentPoints(
           player.place,
-          players[playerIndex].tournamentScore
+          players[playerIndex].tournamentScore,
+          players.length
         );
       });
 
