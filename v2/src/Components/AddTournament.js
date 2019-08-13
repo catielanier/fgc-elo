@@ -18,7 +18,7 @@ class AddTournament extends React.Component {
     success: false,
     error: false,
     message: null,
-    playersinDB: []
+    playersInDB: []
   };
 
   async componentDidMount() {
@@ -26,6 +26,7 @@ class AddTournament extends React.Component {
     await this.dbRefPlayers.on("value", async snapshot => {
       const playersInDB = [];
       const data = snapshot.val();
+      console.log(data);
       for (let key in data) {
         playersInDB.push({
           key,
@@ -51,7 +52,7 @@ class AddTournament extends React.Component {
     const playerList = this.state.playerList.split("\n");
     const playerResults = [];
 
-    const players = this.state.playersinDB;
+    const players = this.state.playersInDB;
 
     await playerList.map((player, index) => {
       const res = {
@@ -164,17 +165,56 @@ class AddTournament extends React.Component {
         const dbIndex2 = players.findIndex(
           player => player.name === match.match.player2_id
         );
+        let playerOne = null;
+        let playerTwo = null;
+        console.log(players);
 
-        const playerOne = players[dbIndex] || new Player();
-        if (!playerOne.name) {
+        if (dbIndex !== -1) {
+          playerOne = players[dbIndex];
+        } else {
+          playerOne = new Player();
           playerOne.name = match.match.player1_id;
         }
-        const playerTwo = players[dbIndex2] || new Player();
-        if (!playerTwo.name) {
+
+        if (dbIndex2 !== -1) {
+          playerTwo = players[dbIndex2];
+        } else {
+          playerTwo = new Player();
           playerTwo.name = match.match.player2_id;
         }
+
         calculateElo(playerOne, playerTwo, match.match);
+
+        if (match.match.player1_score && match.match.player1_score !== 0) {
+          playerOne.gameWins = playerOne.gameWins + match.match.player1_score;
+          if (match.match.player2_score && match.match.player2_score !== 0) {
+            playerOne.gameLosses =
+              playerOne.gameLosses + match.match.player2_score;
+          }
+        }
+
+        if (match.match.player2_score && match.match.player2_score !== 0) {
+          playerTwo.gameWins = playerTwo.gameWins + match.match.player2_score;
+          if (match.match.player1_score && match.match.player1_score !== 0) {
+            playerTwo.gameLosses =
+              playerTwo.gameLosses + match.match.player1_score;
+          }
+        }
+
+        if (dbIndex === -1) {
+          players.push(playerOne);
+        } else {
+          players[dbIndex] = playerOne;
+        }
+
+        if (dbIndex2 === -1) {
+          players.push(playerTwo);
+        } else {
+          players[dbIndex2] = playerTwo;
+        }
       });
+
+      console.log(players);
     }
 
     if (bracketApi === "burningmeter") {
@@ -256,6 +296,7 @@ class AddTournament extends React.Component {
                 playerOne.gameLosses + match.entrant_btm_points;
             }
           }
+
           if (match.entrant_btm_points && match.entrant_btm_points !== 0) {
             playerTwo.gameWins = playerTwo.gameWins + match.entrant_btm_points;
             if (match.entrant_top_points && match.entrant_top_points !== 0) {
