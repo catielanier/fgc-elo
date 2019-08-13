@@ -155,7 +155,6 @@ class AddTournament extends React.Component {
         }
         match.match.player1_score = player1_score;
         match.match.player2_score = player2_score;
-        console.log(match.match);
       });
 
       await matches.map(async match => {
@@ -174,6 +173,7 @@ class AddTournament extends React.Component {
         if (!playerTwo.name) {
           playerTwo.name = match.match.player2_id;
         }
+        calculateElo(playerOne, playerTwo, match.match);
       });
     }
 
