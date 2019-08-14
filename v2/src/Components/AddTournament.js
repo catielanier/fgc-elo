@@ -5,6 +5,8 @@ import findPlace from "./findPlace";
 import { challongeKey } from "../apiKeys";
 import tournamentPoints from "./tournamentPoints";
 import calculateElo from "./calculateElo";
+import countries from "./countries";
+import Select from "react-select";
 
 class AddTournament extends React.Component {
   state = {
@@ -18,7 +20,9 @@ class AddTournament extends React.Component {
     success: false,
     error: false,
     message: null,
-    playersInDB: []
+    playersInDB: [],
+    country: null,
+    countryLong: null
   };
 
   async componentDidMount() {
@@ -26,18 +30,13 @@ class AddTournament extends React.Component {
     await this.dbRefPlayers.on("value", async snapshot => {
       const playersInDB = [];
       const data = snapshot.val();
-      console.log(data);
       for (let key in data) {
         playersInDB.push({
           key,
-          name: data[key].name,
-          elo: data[key].elo || 1200,
-          matchWins: data[key].matchWins || 0,
-          matchLosses: data[key].matchLosses || 0,
-          gameWins: data[key].gameWins || 0,
-          gameLosses: data[key].gameLosses || 0
+          ...data[key]
         });
       }
+      console.log(playersInDB);
       await this.setState({
         playersInDB
       });
@@ -64,20 +63,11 @@ class AddTournament extends React.Component {
       playerResults.push(res);
     });
 
+    console.log(players);
+
     const { tournamentName, bracketUrl, tournamentDate } = this.state;
     let bracketApi = null;
     let matches = null;
-    class Player {
-      constructor() {
-        this.name = null;
-        this.elo = 1200;
-        this.matchWins = 0;
-        this.matchLosses = 0;
-        this.gameWins = 0;
-        this.gameLosses = 0;
-        this.tournamentScore = 0;
-      }
-    }
     const bracketSiteArray = ["challonge", "smash", "burningmeter"];
     bracketSiteArray.forEach(site => {
       const index = bracketUrl.indexOf(site);
@@ -165,23 +155,25 @@ class AddTournament extends React.Component {
         const dbIndex2 = players.findIndex(
           player => player.name === match.match.player2_id
         );
-        let playerOne = null;
-        let playerTwo = null;
-        console.log(players);
+        const playerOne = players[dbIndex] || {
+          name: match.match.player1_id,
+          elo: 1200,
+          matchWins: 0,
+          matchLosses: 0,
+          gameWins: 0,
+          gameLosses: 0,
+          tournamentScore: 0
+        };
 
-        if (dbIndex !== -1) {
-          playerOne = players[dbIndex];
-        } else {
-          playerOne = new Player();
-          playerOne.name = match.match.player1_id;
-        }
-
-        if (dbIndex2 !== -1) {
-          playerTwo = players[dbIndex2];
-        } else {
-          playerTwo = new Player();
-          playerTwo.name = match.match.player2_id;
-        }
+        const playerTwo = players[dbIndex2] || {
+          name: match.match.player2_id,
+          elo: 1200,
+          matchWins: 0,
+          matchLosses: 0,
+          gameWins: 0,
+          gameLosses: 0,
+          tournamentScore: 0
+        };
 
         calculateElo(playerOne, playerTwo, match.match);
 
@@ -214,7 +206,26 @@ class AddTournament extends React.Component {
         }
       });
 
-      console.log(players);
+      await playerResults.map(async player => {
+        const playerIndex = players.findIndex(p => p.name === player.name);
+        console.log(players[playerIndex].tournamentScore);
+
+        players[playerIndex].tournamentScore = tournamentPoints(
+          player.place,
+          players[playerIndex].tournamentScore,
+          players.length
+        );
+      });
+
+      players.forEach(player => {
+        if (!player.key) {
+          this.dbRefPlayers.push(player);
+        } else {
+          this.dbRefPlayer = firebase.database().ref(`players/${player.key}`);
+          delete player.key;
+          this.dbRefPlayer.update(player);
+        }
+      });
     }
 
     if (bracketApi === "burningmeter") {
@@ -278,14 +289,24 @@ class AddTournament extends React.Component {
           const dbIndex2 = players.findIndex(
             player => player.name === match.entrant_btm_id
           );
-          const playerOne = players[dbIndex] || new Player();
-          if (!playerOne.name) {
-            playerOne.name = match.entrant_top_id;
-          }
-          const playerTwo = players[dbIndex2] || new Player();
-          if (!playerTwo.name) {
-            playerTwo.name = match.entrant_btm_id;
-          }
+          const playerOne = players[dbIndex] || {
+            name: match.entrant_top_id,
+            elo: 1200,
+            matchWins: 0,
+            matchLosses: 0,
+            gameWins: 0,
+            gameLosses: 0,
+            tournamentScore: 0
+          };
+          const playerTwo = players[dbIndex2] || {
+            name: match.entrant_btm_id,
+            elo: 1200,
+            matchWins: 0,
+            matchLosses: 0,
+            gameWins: 0,
+            gameLosses: 0,
+            tournamentScore: 0
+          };
 
           calculateElo(playerOne, playerTwo, match);
 
@@ -317,6 +338,25 @@ class AddTournament extends React.Component {
             players[dbIndex2] = playerTwo;
           }
         }
+        await playerResults.map(async player => {
+          const playerIndex = players.findIndex(p => p.name === player.name);
+
+          players[playerIndex].tournamentScore = tournamentPoints(
+            player.place,
+            players[playerIndex].tournamentScore,
+            players.length
+          );
+        });
+
+        players.forEach(player => {
+          if (!player.key) {
+            this.dbRefPlayers.push(player);
+          } else {
+            this.dbRefPlayer = firebase.database().ref(`players/${player.key}`);
+            delete player.key;
+            this.dbRefPlayer.update(player);
+          }
+        });
       });
 
       await playerResults.map(async player => {
@@ -358,6 +398,14 @@ class AddTournament extends React.Component {
     });
   };
 
+  setCountry = e => {
+    const { value, label } = e;
+    this.setState({
+      country: value,
+      countryLong: label
+    });
+  };
+
   render() {
     return (
       <section className="add-tournament">
@@ -383,6 +431,14 @@ class AddTournament extends React.Component {
                 name="tournamentDate"
                 value={this.state.tournamentDate}
                 onChange={this.changeState}
+              />
+            </label>
+            <label htmlFor="country">
+              <p>Tournament Country:</p>
+              <Select
+                name="country"
+                onChange={this.setCountry}
+                options={countries}
               />
             </label>
             <label htmlFor="playerList">
