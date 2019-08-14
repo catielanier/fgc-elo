@@ -27,16 +27,19 @@ class AddTournament extends React.Component {
 
   async componentDidMount() {
     this.dbRefPlayers = firebase.database().ref("players/");
+
     await this.dbRefPlayers.on("value", async snapshot => {
       const playersInDB = [];
+
       const data = snapshot.val();
+
       for (let key in data) {
         playersInDB.push({
           key,
           ...data[key]
         });
       }
-      console.log(playersInDB);
+
       await this.setState({
         playersInDB
       });
@@ -45,10 +48,13 @@ class AddTournament extends React.Component {
 
   submitTournament = async e => {
     e.preventDefault();
+
     await this.setState({
       loading: true
     });
+
     const playerList = this.state.playerList.split("\n");
+
     const playerResults = [];
 
     const players = this.state.playersInDB;
@@ -63,18 +69,27 @@ class AddTournament extends React.Component {
       playerResults.push(res);
     });
 
-    console.log(players);
+    const {
+      tournamentName,
+      bracketUrl,
+      tournamentDate,
+      country,
+      countryLong
+    } = this.state;
 
-    const { tournamentName, bracketUrl, tournamentDate } = this.state;
     let bracketApi = null;
+
     let matches = null;
+
     const bracketSiteArray = ["challonge", "smash", "burningmeter"];
+
     bracketSiteArray.forEach(site => {
       const index = bracketUrl.indexOf(site);
       if (index !== -1) {
         bracketApi = site;
       }
     });
+
     if (bracketApi === "challonge") {
       const tournamentId = bracketUrl.replace("https://challonge.com/", "");
 
@@ -152,9 +167,11 @@ class AddTournament extends React.Component {
         const dbIndex = players.findIndex(
           player => player.name === match.match.player1_id
         );
+
         const dbIndex2 = players.findIndex(
           player => player.name === match.match.player2_id
         );
+
         const playerOne = players[dbIndex] || {
           name: match.match.player1_id,
           elo: 1200,
