@@ -249,21 +249,26 @@ form textarea {
   padding: 3px 5px;
   margin-bottom: 20px;
   border: 0;
-  border-bottom: 1px solid #e9a7c6;
+  border-bottom: 2px solid #e9a7c6;
+  border-radius: 3px;
+}
+
+form input:not([type="submit"]):focus {
+  border-bottom: 2px solid #b3cde0;
 }
 
 form textarea {
-  border-top: 1px solid #b3cde0;
-  border-left: 1px solid #b3cde0;
-  border-right: 1px solid #e9a7c6;
+  border-top: 2px solid #b3cde0;
+  border-left: 2px solid #b3cde0;
+  border-right: 2px solid #e9a7c6;
   height: 400px;
 }
 
-form textarea:active {
-  border-bottom: 1px solid #b3cde0;
-  border-right: 1px solid #b3cde0;
-  border-top: 1px solid #e9a7c6;
-  border-left: 1px solid #e9a7c6;
+form textarea:focus {
+  border-bottom: 2px solid #b3cde0;
+  border-right: 2px solid #b3cde0;
+  border-top: 2px solid #e9a7c6;
+  border-left: 2px solid #e9a7c6;
 }
 
 form input[type="submit"] {

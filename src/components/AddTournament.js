@@ -11,18 +11,19 @@ import Select from "react-select";
 class AddTournament extends React.Component {
   state = {
     playerList: "",
-    tournamentName: "",
+    tournamentName: null,
     tournamentDate: null,
-    bracketUrl: "",
+    bracketUrl: null,
     paperBracket: false,
-    paperBracketImage: "",
+    paperBracketImage: null,
     loading: false,
     success: false,
     error: false,
     message: null,
     playersInDB: [],
     country: null,
-    countryLong: null
+    countryLong: null,
+    vodUrl: null
   };
 
   async componentDidMount() {
@@ -74,7 +75,10 @@ class AddTournament extends React.Component {
       bracketUrl,
       tournamentDate,
       country,
-      countryLong
+      countryLong,
+      paperBracketImage,
+      vodUrl,
+      paperBracket
     } = this.state;
 
     let bracketApi = null;
@@ -492,6 +496,15 @@ class AddTournament extends React.Component {
                 <input type="file" name="paperBracketImage" />
               </label>
             )}
+            <label htmlFor="vodUrl">
+              <p>Stream VOD:</p>
+              <input
+                type="text"
+                name="vodUrl"
+                value={this.state.vodUrl}
+                onChange={this.changeState}
+              />
+            </label>
             <input type="submit" value="Submit Tournament" />
           </fieldset>
         </form>
