@@ -20,7 +20,7 @@ class Player extends React.Component {
   };
 
   async componentDidMount() {
-    const tournaments = [];
+    const allTournaments = [];
     const key = window.location.pathname.replace("/player/", "");
     const characterObject = {
       moon: moon,
@@ -54,8 +54,17 @@ class Player extends React.Component {
           key,
           ...data[key]
         };
-        tournaments.push(tournament);
+        allTournaments.push(tournament);
       }
+      const tournaments = allTournaments.filter(tournament => {
+        let hasPlayer = false;
+        tournament.results.forEach(player => {
+          if (player.key === key) {
+            hasPlayer = true;
+          }
+        });
+        return hasPlayer === true;
+      });
       await this.setState({
         tournaments
       });
