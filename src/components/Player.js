@@ -15,10 +15,12 @@ import neptune from "../assets/neptune.png";
 class Player extends React.Component {
   state = {
     player: {},
-    characterUrl: ""
+    characterUrl: "",
+    tournaments: []
   };
 
   async componentDidMount() {
+    const tournaments = [];
     const key = window.location.pathname.replace("/player/", "");
     const characterObject = {
       moon: moon,
@@ -44,103 +46,132 @@ class Player extends React.Component {
         characterUrl
       });
     });
+    this.dbRefTournaments = firebase.database().ref(`tournaments/`);
+    this.dbRefTournaments.on("value", async snapshot => {
+      const data = snapshot.val();
+      for (let key in data) {
+        const tournament = {
+          key,
+          ...data[key]
+        };
+        tournaments.push(tournament);
+      }
+      await this.setState({
+        tournaments
+      });
+    });
   }
 
   render() {
     return (
-      <section className="player">
-        <div className="grid-container">
-          <div className="player-picture">
-            {this.state.player.imageUrl &&
-              this.state.player.imageUrl !== "" && (
-                <img
-                  src={this.state.player.imageUrl}
-                  alt={this.state.player.name}
-                />
-              )}
-          </div>
-          <div className="player-profile">
-            <h3>{this.state.player.name}</h3>
-            <div className="profile-grid">
-              <div className="profile-header">Real Name:</div>
-              <div className="profile-answer">
-                {this.state.player.realName || "Unknown"}
-              </div>
-              <div className="profile-header">Country:</div>
-              <div className="profile-answer">
-                {this.state.player.country && this.state.player.country !== "" && (
+      <>
+        <section className="player">
+          <div className="grid-container">
+            <div className="player-picture">
+              {this.state.player.imageUrl &&
+                this.state.player.imageUrl !== "" && (
+                  <img
+                    src={this.state.player.imageUrl}
+                    alt={this.state.player.name}
+                  />
+                )}
+            </div>
+            <div className="player-profile">
+              <h3>{this.state.player.name}</h3>
+              <div className="profile-grid">
+                <div className="profile-header">Real Name:</div>
+                <div className="profile-answer">
+                  {this.state.player.realName || "Unknown"}
+                </div>
+                <div className="profile-header">Country:</div>
+                <div className="profile-answer">
+                  {this.state.player.country &&
+                    this.state.player.country !== "" && (
+                      <>
+                        <Flag code={this.state.player.country} height="18" />{" "}
+                        {this.state.player.countryLong}
+                      </>
+                    )}
+                </div>
+                <div className="profile-header">Character:</div>
+                <div className="profile-answer">
+                  {this.state.player.characterShort &&
+                    this.state.player.characterShort !== "" && (
+                      <>
+                        <img
+                          src={this.state.characterUrl}
+                          alt={this.state.player.character}
+                          height="20"
+                        />{" "}
+                        {this.state.player.character}
+                      </>
+                    )}
+                </div>
+                <div className="profile-header">Team:</div>
+                <div className="profile-answer">
+                  {this.state.player.team || "None"}
+                </div>
+                <div className="profile-header">Controller:</div>
+                <div className="profile-answer">
+                  {this.state.player.controller || "Unknown"}
+                </div>
+                {this.state.player.twitter && this.state.player.twitter !== "" && (
                   <>
-                    <Flag code={this.state.player.country} height="18" />{" "}
-                    {this.state.player.countryLong}
+                    <div className="profile-header">Twitter:</div>
+                    <div className="profile-answer">
+                      <a
+                        href={`https://twitter.com/${
+                          this.state.player.twitter
+                        }`}
+                      >
+                        @{this.state.player.twitter}
+                      </a>
+                    </div>
+                  </>
+                )}
+                {this.state.player.twitch && this.state.player.twitch !== "" && (
+                  <>
+                    <div className="profile-header">Twitch:</div>
+                    <div className="profile-answer">
+                      <a href={`https://twitch.tv/${this.state.player.twitch}`}>
+                        {this.state.player.twitch}
+                      </a>
+                    </div>
+                  </>
+                )}
+                {this.state.player.mixer && this.state.player.mixer !== "" && (
+                  <>
+                    <div className="profile-header">Mixer:</div>
+                    <div className="profile-answer">
+                      <a href={`https://mixer.com/${this.state.player.mixer}`}>
+                        {this.state.player.mixer}
+                      </a>
+                    </div>
                   </>
                 )}
               </div>
-              <div className="profile-header">Character:</div>
-              <div className="profile-answer">
-                {this.state.player.characterShort &&
-                  this.state.player.characterShort !== "" && (
-                    <>
-                      <img
-                        src={this.state.characterUrl}
-                        alt={this.state.player.character}
-                        height="20"
-                      />{" "}
-                      {this.state.player.character}
-                    </>
-                  )}
-              </div>
-              <div className="profile-header">Team:</div>
-              <div className="profile-answer">
-                {this.state.player.team || "None"}
-              </div>
-              <div className="profile-header">Controller:</div>
-              <div className="profile-answer">
-                {this.state.player.controller || "Unknown"}
-              </div>
-              {this.state.player.twitter && this.state.player.twitter !== "" && (
-                <>
-                  <div className="profile-header">Twitter:</div>
-                  <div className="profile-answer">
-                    <a
-                      href={`https://twitter.com/${this.state.player.twitter}`}
-                    >
-                      @{this.state.player.twitter}
-                    </a>
-                  </div>
-                </>
-              )}
-              {this.state.player.twitch && this.state.player.twitch !== "" && (
-                <>
-                  <div className="profile-header">Twitch:</div>
-                  <div className="profile-answer">
-                    <a href={`https://twitch.tv/${this.state.player.twitch}`}>
-                      {this.state.player.twitch}
-                    </a>
-                  </div>
-                </>
-              )}
-              {this.state.player.mixer && this.state.player.mixer !== "" && (
-                <>
-                  <div className="profile-header">Mixer:</div>
-                  <div className="profile-answer">
-                    <a href={`https://mixer.com/${this.state.player.mixer}`}>
-                      {this.state.player.mixer}
-                    </a>
-                  </div>
-                </>
-              )}
             </div>
           </div>
-        </div>
-        {this.props.user && (
-          <Link
-            to={`/edit-player/${this.state.player.key}`}
-            className="admin-button"
-          >
-            Edit Player
-          </Link>
-        )}
-      </section>
+          {this.props.user && (
+            <Link
+              to={`/edit-player/${this.state.player.key}`}
+              className="admin-button"
+            >
+              Edit Player
+            </Link>
+          )}
+        </section>
+        <section className="tournament-list">
+          <div className="grid-container">
+            <div className="grid-row grid-header">
+              <div>Date</div>
+              <div>Tournament</div>
+              <div>Place</div>
+              <div># Entrants</div>
+            </div>
+          </div>
+        </section>
+      </>
     );
   }
 }

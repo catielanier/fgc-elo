@@ -253,7 +253,6 @@ class AddTournament extends React.Component {
 
       await playerResults.map(async player => {
         const playerIndex = players.findIndex(p => p.name === player.name);
-        console.log(players[playerIndex].tournamentScore);
 
         players[playerIndex].tournamentScore = tournamentPoints(
           player.place,
