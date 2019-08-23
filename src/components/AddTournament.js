@@ -51,6 +51,7 @@ class AddTournament extends React.Component {
     e.preventDefault();
 
     await this.setState({
+      success: false,
       loading: true
     });
 
@@ -401,7 +402,17 @@ class AddTournament extends React.Component {
       });
     }
     this.setState({
-      loading: false
+      loading: false,
+      success: true,
+      tournamentName: null,
+      bracketUrl: null,
+      tournamentDate: null,
+      country: null,
+      countryLong: null,
+      paperBracketImage: null,
+      vodUrl: null,
+      paperBracket: false,
+      playerList: ""
     });
   };
 
@@ -436,6 +447,9 @@ class AddTournament extends React.Component {
             aria-busy={this.state.loading}
             disabled={this.state.loading}
           >
+            {this.state.success && (
+              <p className="success">Tournament successfully added!</p>
+            )}
             <label htmlFor="tournamentName">
               <p>Tournament Name:</p>{" "}
               <input
