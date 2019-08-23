@@ -86,6 +86,8 @@ class AddTournament extends React.Component {
 
     let matches = null;
 
+    let tournaments = null;
+
     const bracketSiteArray = ["challonge", "smash", "burningmeter"];
 
     bracketSiteArray.forEach(site => {
@@ -95,9 +97,30 @@ class AddTournament extends React.Component {
       }
     });
 
-    if (bracketApi === "challonge") {
-      const tournamentId = bracketUrl.replace("https://challonge.com/", "");
+    const tournamentId = bracketUrl
+      .replace("https://challonge.com/", "")
+      .replace("https://www.burningmeter.com/t/", "");
 
+    this.dbRefTournaments = firebase.database().ref("tournaments/");
+
+    this.dbRefTournaments.on("value", snapshot => {
+      tournaments = snapshot.val();
+
+      for (let key in tournaments) {
+        if (
+          tournaments[key].bracketApi === bracketApi &&
+          tournaments[key].tournamentId === tournamentId
+        ) {
+          this.setState({
+            error: true,
+            message: "This tournament has already been put into the database!"
+          });
+          return;
+        }
+      }
+    });
+
+    if (bracketApi === "challonge") {
       await axios({
         method: "get",
         url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}/matches.json`,
@@ -251,10 +274,9 @@ class AddTournament extends React.Component {
     }
 
     if (bracketApi === "burningmeter") {
-      const tournamentId = bracketUrl;
       await axios({
         method: "get",
-        url: `${tournamentId}/s/bracket.json`,
+        url: `${bracketUrl}/s/bracket.json`,
         header: {
           "content-type": "text/plain"
         }
@@ -401,6 +423,28 @@ class AddTournament extends React.Component {
         }
       });
     }
+    playerResults.forEach(player => {
+      const index = this.state.playersInDB.findIndex(
+        dbPlayer => player.name === dbPlayer.name
+      );
+      player.key = this.state.playersInDB[index].key;
+    });
+
+    const tournament = {
+      tournamentName,
+      tournamentDate,
+      tournamentId,
+      bracketApi,
+      country,
+      countryLong,
+      paperBracket,
+      paperBracketImage,
+      vodUrl,
+      results: playerResults
+    };
+
+    await this.dbRefTournaments.push(tournament);
+
     this.setState({
       loading: false,
       success: true,
