@@ -331,7 +331,8 @@ fieldset[aria-busy="true"]::before {
   text-align: left;
 }
 
-.player-list .grid-container {
+.player-list .grid-container,
+.tournament-list .grid-container {
   display: grid;
   grid-auto-rows: 1fr;
   width: 95%;
@@ -346,19 +347,23 @@ fieldset[aria-busy="true"]::before {
   grid-template-columns: 7% 47% 12% 19% 15%;
 }
 
-.player-list .grid-container a:nth-of-type(2n + 2) {
+.player-list .grid-container a:nth-of-type(2n + 2),
+.tournament-list .grid-container a:nth-of-type(2n + 2) {
   background: #f3e0e9;
 }
 
-.player-list .grid-container a:hover {
+.player-list .grid-container a:hover,
+.tournament-list .grid-container a:hover {
   background: #e9a7c6;
 }
 
-.player-list .grid-container a:hover .grid-row div {
+.player-list .grid-container a:hover .grid-row div,
+.tournament-list .grid-container a:hover .grid-row div {
   border: 1px solid #fff;
 }
 
-.player-list .grid-container a {
+.player-list .grid-container a,
+.tournament-list .grid-container a {
   text-decoration: none;
   color: #000;
   transition: all 0.3s ease-in-out;
@@ -409,7 +414,7 @@ p.error-message span {
 .player {
   width: 70%;
   max-width: 700px;
-  margin: 0 auto;
+  margin: 0 auto 40px;
 }
 
 .player .grid-container {
@@ -441,4 +446,9 @@ p.error-message span {
 
 .player .grid-container .player-picture img {
   width: 100%;
+}
+
+.tournament-list .grid-container .grid-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
 }

@@ -65,6 +65,15 @@ class Player extends React.Component {
         });
         return hasPlayer === true;
       });
+      tournaments.forEach(tournament => {
+        tournament.results.forEach(player => {
+          if (player.key === key) {
+            tournament.place = player.place;
+          }
+        });
+        console.log(tournament.place);
+      });
+
       await this.setState({
         tournaments
       });
@@ -178,6 +187,54 @@ class Player extends React.Component {
               <div>Place</div>
               <div># Entrants</div>
             </div>
+            {this.state.tournaments.map((tournament, index) => {
+              return (
+                <Link to={`/tournament/${tournament.key}`}>
+                  <div className="grid-row" key={index}>
+                    <div>{tournament.tournamentDate}</div>
+                    <div>{tournament.tournamentName}</div>
+                    <div>
+                      {tournament.place}
+                      {tournament.place.toString()[
+                        tournament.place.toString().length - 1
+                      ] === "1"
+                        ? "st"
+                        : tournament.place.toString()[
+                            tournament.place.toString().length - 1
+                          ] === "3"
+                        ? "rd"
+                        : tournament.place.toString()[
+                            tournament.place.toString().length - 1
+                          ] === "2"
+                        ? "nd"
+                        : tournament.place.toString()[
+                            tournament.place.toString().length - 2
+                          ] === "1" &&
+                          tournament.place.toString()[
+                            tournament.place.toString().length - 1
+                          ] === "1"
+                        ? "th"
+                        : tournament.place.toString()[
+                            tournament.place.toString().length - 2
+                          ] === "1" &&
+                          tournament.place.toString()[
+                            tournament.place.toString().length - 1
+                          ] === "2"
+                        ? "th"
+                        : tournament.place.toString()[
+                            tournament.place.toString().length - 2
+                          ] === "1" &&
+                          tournament.place.toString()[
+                            tournament.place.toString().length - 1
+                          ] === "3"
+                        ? "th"
+                        : "th"}
+                    </div>
+                    <div>{tournament.results.length}</div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       </>
