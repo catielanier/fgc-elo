@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import firebase from "../firebase";
 import Flag from "react-world-flags";
+import Helmet from "react-helmet";
 import moon from "../assets/moon.png";
 import pluto from "../assets/pluto.png";
 import uranus from "../assets/uranus.png";
@@ -83,6 +84,11 @@ class Player extends React.Component {
   render() {
     return (
       <>
+        <Helmet>
+          <title>
+            {`${this.state.player.name} | Sailor Moon S Global Rankings`}
+          </title>
+        </Helmet>
         <section className="player">
           <div className="grid-container">
             <div className="player-picture">
@@ -192,7 +198,10 @@ class Player extends React.Component {
                 <Link to={`/tournament/${tournament.key}`}>
                   <div className="grid-row" key={index}>
                     <div>{tournament.tournamentDate}</div>
-                    <div>{tournament.tournamentName}</div>
+                    <div>
+                      <Flag code={tournament.country} height="16" />{" "}
+                      {tournament.tournamentName}
+                    </div>
                     <div>
                       {tournament.place}
                       {tournament.place.toString()[

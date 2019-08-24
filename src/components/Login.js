@@ -1,4 +1,5 @@
 import React from "react";
+import Helmet from "react-helmet";
 import { Redirect } from "react-router-dom";
 import { auth } from "../firebase";
 
@@ -54,6 +55,9 @@ class Login extends React.Component {
     }
     return (
       <section className="login">
+        <Helmet>
+          <title>{"Login | Sailor Moon S Global Rankings"}</title>
+        </Helmet>
         <h3>Login</h3>
         <form onSubmit={this.submitForm}>
           <fieldset

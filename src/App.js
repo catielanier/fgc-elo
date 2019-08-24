@@ -1,4 +1,5 @@
 import React from "react";
+import Helmet from "react-helmet";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { auth } from "./firebase";
 import Header from "./components/Header";
@@ -38,6 +39,9 @@ class App extends React.Component {
     return (
       <div className="App">
         <Router>
+          <Helmet>
+            <title>{"Sailor Moon S Global Rankings"}</title>
+          </Helmet>
           <Header user={this.state.user} releaseUser={this.releaseUser} />
           <main>
             <Route exact path="/" component={PlayerList} />

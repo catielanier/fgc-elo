@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Helmet from "react-helmet";
 import firebase from "../firebase";
 import findPlace from "./findPlace";
 import { challongeKey } from "../apiKeys";
@@ -484,6 +485,9 @@ class AddTournament extends React.Component {
   render() {
     return (
       <section className="add-tournament">
+        <Helmet>
+          <title>{"Add Tournament | Sailor Moon S Global Rankings"}</title>
+        </Helmet>
         <h3>Add Tournament</h3>
         <form onSubmit={this.submitTournament}>
           <fieldset
