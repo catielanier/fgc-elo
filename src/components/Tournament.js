@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Helmet from "react-helmet";
+import YouTube from "react-youtube";
 import firebase from "../firebase";
 import Flag from "react-world-flags";
 
@@ -11,7 +12,7 @@ class Tournament extends React.Component {
   async componentDidMount() {
     const key = window.location.pathname.replace("/tournament/", "");
     this.dbRefTournament = firebase.database().ref(`tournaments/${key}`);
-    await this.dbRefTournament.on("value", snapshot => {
+    await this.dbRefTournament.on("value", async snapshot => {
       const tournament = snapshot.val();
       tournament.key = key;
       const newDate = new Date(tournament.tournamentDate + "T00:00:00");
@@ -23,14 +24,101 @@ class Tournament extends React.Component {
       } else if (tournament.bracketApi === "burningmeter") {
         tournament.bracketUrl = `https://burningmeter.com/${tournament.tournamentId}`;
       }
-      this.setState({ tournament });
+      await tournament.results.forEach(async player => {
+        this.dbRefPlayer = firebase.database().ref(`players/${player.key}`);
+        await this.dbRefPlayer.once("value", async snapshot => {
+          const data = snapshot.val();
+          player.country = data.country;
+          player.countryLong = data.countryLong;
+          player.name = data.name;
+          player.teamShort = data.teamShort;
+          await this.setState({ tournament });
+        });
+      });
     });
   }
   render() {
     return (
-      <section className="tournament">
-        <h3>{this.state.tournament.tournamentName}</h3>
-      </section>
+      <>
+        <Helmet>
+          <title>{`${this.state.tournament.tournamentName} | Sailor Moon S Global Rankings`}</title>
+        </Helmet>
+        <section className="tournament">
+          <div className="grid-container">
+            <div className="tournament-info">
+              <h3>{this.state.tournament.tournamentName}</h3>
+              <p>
+                <span>Location:</span>{" "}
+                {this.state.tournament.country && (
+                  <Flag code={this.state.tournament.country} height="16" />
+                )}
+                {this.state.tournament.countryLong}
+              </p>
+              <p>
+                <span>Date:</span> {this.state.tournament.tournamentDate}
+              </p>
+              <p>
+                <span># of Entrants:</span>{" "}
+                {this.state.tournament.results &&
+                  this.state.tournament.results.length}
+              </p>
+              <p>
+                <span>Bracket:</span>{" "}
+                {this.state.tournament.bracketUrl && (
+                  <a
+                    href={this.state.tournament.bracketUrl}
+                    className="bracket-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {this.state.tournament.bracketApi}
+                  </a>
+                )}
+              </p>
+              <p>
+                {this.state.tournament.vodUrl && (
+                  <YouTube
+                    videoId={this.state.tournament.vodUrl.replace(
+                      "https://www.youtube.com/watch?v=",
+                      ""
+                    )}
+                  />
+                )}
+              </p>
+            </div>
+            {this.state.tournament.results && (
+              <div className="player-results">
+                <div className="grid-container">
+                  <div className="grid-row grid-header">
+                    <div>Rank</div>
+                    <div>Player</div>
+                  </div>
+                  {this.state.tournament.results.map((player, index) => {
+                    return (
+                      <Link to={`/player/${player.key}`}>
+                        <div className="grid-row" key={index}>
+                          <div>{player.place}</div>
+                          <div>
+                            {player.country && (
+                              <Flag
+                                code={player.country}
+                                alt={player.countryLong}
+                                height="16"
+                              />
+                            )}{" "}
+                            <span className="team">{player.teamShort}</span>{" "}
+                            {player.name}
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      </>
     );
   }
 }

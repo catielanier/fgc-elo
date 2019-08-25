@@ -348,22 +348,26 @@ fieldset[aria-busy="true"]::before {
 }
 
 .player-list .grid-container a:nth-of-type(2n + 2),
-.tournament-list .grid-container a:nth-of-type(2n + 2) {
+.tournament-list .grid-container a:nth-of-type(2n + 2),
+.player-results .grid-container a:nth-of-type(2n + 2) {
   background: #f3e0e9;
 }
 
 .player-list .grid-container a:hover,
-.tournament-list .grid-container a:hover {
+.tournament-list .grid-container a:hover,
+.player-results .grid-container a:hover {
   background: #e9a7c6;
 }
 
 .player-list .grid-container a:hover .grid-row div,
-.tournament-list .grid-container a:hover .grid-row div {
+.tournament-list .grid-container a:hover .grid-row div,
+.player-results .grid-container a:hover .grid-row div {
   border: 1px solid #fff;
 }
 
 .player-list .grid-container a,
-.tournament-list .grid-container a {
+.tournament-list .grid-container a,
+.player-results .grid-container a {
   text-decoration: none;
   color: #000;
   transition: all 0.3s ease-in-out;
@@ -379,7 +383,8 @@ select[name="sorting"] {
   color: #f4c9a5;
 }
 
-.grid-header {
+.grid-header,
+.tournament-info span {
   font-weight: bold;
 }
 
@@ -425,6 +430,20 @@ p.error-message span {
   text-align: left;
 }
 
+.tournament {
+  margin: 50px 0;
+}
+
+.tournament h3 {
+  margin-top: 0;
+}
+
+.tournament .tournament-info a {
+  text-decoration: none;
+  color: #e9a7c6;
+  text-transform: capitalize;
+}
+
 .player .profile-grid {
   display: grid;
   grid-template-columns: 1fr 3fr;
@@ -451,4 +470,28 @@ p.error-message span {
 .tournament-list .grid-container .grid-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+}
+
+.tournament > .grid-container {
+  width: 70%;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  margin: 0 auto;
+  grid-gap: 30px;
+}
+
+.tournament > .grid-container iframe {
+  width: 100%;
+  height: 45vh;
+}
+
+.tournament > .grid-container .player-results .grid-container {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.tournament > .grid-container .player-results .grid-container .grid-row {
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  text-align: left;
 }
