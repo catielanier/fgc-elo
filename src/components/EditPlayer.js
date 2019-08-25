@@ -21,7 +21,9 @@ class EditPlayer extends React.Component {
     teamShort: "",
     imageUrl: "",
     loading: false,
-    success: false
+    success: false,
+    error: false,
+    message: null
   };
 
   componentDidMount() {
