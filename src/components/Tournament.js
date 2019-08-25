@@ -78,16 +78,14 @@ class Tournament extends React.Component {
                   )}
                 </div>
               </div>
-              <p>
-                {this.state.tournament.vodUrl && (
-                  <YouTube
-                    videoId={this.state.tournament.vodUrl.replace(
-                      "https://www.youtube.com/watch?v=",
-                      ""
-                    )}
-                  />
-                )}
-              </p>
+              {this.state.tournament.vodUrl && (
+                <YouTube
+                  videoId={this.state.tournament.vodUrl.replace(
+                    "https://www.youtube.com/watch?v=",
+                    ""
+                  )}
+                />
+              )}
               <Link
                 to={`/edit-tournament/${this.state.tournament.key}`}
                 className="admin-button"
