@@ -198,9 +198,16 @@ header .admin-buttons a:not(:last-of-type) {
   margin-right: 10px;
 }
 
+.tournament .tournament-info a {
+  text-decoration: none;
+  color: #e9a7c6;
+  text-transform: capitalize;
+}
+
 header .admin-buttons a,
 form input[type="submit"],
-.admin-button {
+.admin-button,
+.tournament .tournament-info .admin-button {
   display: inline-block;
   text-decoration: none;
   background: #923;
@@ -214,7 +221,8 @@ form input[type="submit"],
 
 header .admin-buttons a:hover,
 form input[type="submit"]:hover,
-.admin-button:hover {
+.admin-button:hover,
+.tournament .tournament-info .admin-button:hover {
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
   background: #8a1b2a;
 }
@@ -436,12 +444,6 @@ p.error-message span {
 
 .tournament h3 {
   margin-top: 0;
-}
-
-.tournament .tournament-info a {
-  text-decoration: none;
-  color: #e9a7c6;
-  text-transform: capitalize;
 }
 
 .player .profile-grid {

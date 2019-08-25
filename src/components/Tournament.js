@@ -88,6 +88,12 @@ class Tournament extends React.Component {
                   />
                 )}
               </p>
+              <Link
+                to={`/edit-tournament/${this.state.tournament.key}`}
+                className="admin-button"
+              >
+                Edit Tournament
+              </Link>
             </div>
             {this.state.tournament.results && (
               <div className="player-results">
