@@ -450,7 +450,8 @@ p.error-message span {
   grid-gap: 15px;
 }
 
-.player .grid-container h3 {
+.player .grid-container h3,
+.tournament .grid-container h3 {
   font-size: 1.5rem;
 }
 
@@ -494,4 +495,16 @@ p.error-message span {
   display: grid;
   grid-template-columns: 1fr 7fr;
   text-align: left;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 40%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.info-grid .info-header {
+  font-weight: bold;
 }

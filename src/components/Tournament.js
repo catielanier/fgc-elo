@@ -47,34 +47,37 @@ class Tournament extends React.Component {
           <div className="grid-container">
             <div className="tournament-info">
               <h3>{this.state.tournament.tournamentName}</h3>
-              <p>
-                <span>Location:</span>{" "}
-                {this.state.tournament.country && (
-                  <Flag code={this.state.tournament.country} height="16" />
-                )}
-                {this.state.tournament.countryLong}
-              </p>
-              <p>
-                <span>Date:</span> {this.state.tournament.tournamentDate}
-              </p>
-              <p>
-                <span># of Entrants:</span>{" "}
-                {this.state.tournament.results &&
-                  this.state.tournament.results.length}
-              </p>
-              <p>
-                <span>Bracket:</span>{" "}
-                {this.state.tournament.bracketUrl && (
-                  <a
-                    href={this.state.tournament.bracketUrl}
-                    className="bracket-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {this.state.tournament.bracketApi}
-                  </a>
-                )}
-              </p>
+              <div className="info-grid">
+                <div className="info-header">Location:</div>
+                <div className="info-answer">
+                  {this.state.tournament.country && (
+                    <Flag code={this.state.tournament.country} height="16" />
+                  )}
+                  {this.state.tournament.countryLong}
+                </div>
+                <div className="info-header">Date: </div>
+                <div className="info-answer">
+                  {this.state.tournament.tournamentDate}
+                </div>
+                <div className="info-header"># of Entrants:</div>
+                <div className="info-answer">
+                  {this.state.tournament.results &&
+                    this.state.tournament.results.length}
+                </div>
+                <div className="info-header">Bracket:</div>
+                <div className="info-answer">
+                  {this.state.tournament.bracketUrl && (
+                    <a
+                      href={this.state.tournament.bracketUrl}
+                      className="bracket-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {this.state.tournament.bracketApi}
+                    </a>
+                  )}
+                </div>
+              </div>
               <p>
                 {this.state.tournament.vodUrl && (
                   <YouTube
