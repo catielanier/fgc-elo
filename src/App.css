@@ -329,10 +329,12 @@ fieldset[aria-busy="true"]::before {
   margin-top: 50px;
 }
 
-.edit-player form {
+.edit-player form,
+.edit-tournament form {
   max-width: 560px;
   width: 95%;
   margin: 50px auto;
+  text-align: left;
 }
 
 .edit-player fieldset {
@@ -484,6 +486,7 @@ p.error-message span {
 }
 
 .tournament > .grid-container iframe {
+  margin: 40px 0;
   width: 100%;
   height: 45vh;
 }
