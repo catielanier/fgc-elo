@@ -258,7 +258,7 @@ class AddTournament extends React.Component {
         players[playerIndex].tournamentScore = tournamentPoints(
           player.place,
           players[playerIndex].tournamentScore,
-          players.length
+          playerResults.length
         );
       });
 
@@ -404,12 +404,13 @@ class AddTournament extends React.Component {
       });
 
       await playerResults.map(async player => {
+        console.log(playerResults.length);
         const playerIndex = players.findIndex(p => p.name === player.name);
 
         players[playerIndex].tournamentScore = tournamentPoints(
           player.place,
           players[playerIndex].tournamentScore,
-          players.length
+          playerResults.length
         );
       });
 
