@@ -128,6 +128,10 @@ class EditTournament extends React.Component {
               Country:
               <Select
                 onChange={this.setCountry}
+                value={{
+                  value: this.state.country,
+                  label: this.state.countryLong || "Select Country"
+                }}
                 options={countries}
                 styles={SelectStyle}
               />

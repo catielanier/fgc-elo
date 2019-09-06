@@ -8,7 +8,7 @@ const SelectStyle = {
         ? "2px solid #b3cde0"
         : "2px solid #e9a7c6",
     fontFamily: `"Dosis", sans-serif`,
-    marginBottom: "15px"
+    marginBottom: "20px"
   })
 };
 

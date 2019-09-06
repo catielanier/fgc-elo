@@ -175,6 +175,10 @@ class EditPlayer extends React.Component {
               <p>Country</p>
               <Select
                 onChange={this.setCountry}
+                value={{
+                  value: this.state.country,
+                  label: this.state.countryLong || "Select Country"
+                }}
                 options={countries}
                 styles={SelectStyle}
               />
@@ -184,6 +188,10 @@ class EditPlayer extends React.Component {
               <Select
                 options={characters}
                 onChange={this.setCharacter}
+                value={{
+                  value: this.state.characterShort,
+                  label: this.state.character || "Select Character"
+                }}
                 styles={SelectStyle}
               />
             </label>
