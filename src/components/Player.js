@@ -91,7 +91,7 @@ class Player extends React.Component {
         </Helmet>
         <section className="player">
           <div className="grid-container">
-            <div className="player-picture">
+            <div className="profile-picture">
               {this.state.player.imageUrl &&
                 this.state.player.imageUrl !== "" && (
                   <img
@@ -144,9 +144,7 @@ class Player extends React.Component {
                     <div className="profile-header">Twitter:</div>
                     <div className="profile-answer">
                       <a
-                        href={`https://twitter.com/${
-                          this.state.player.twitter
-                        }`}
+                        href={`https://twitter.com/${this.state.player.twitter}`}
                       >
                         @{this.state.player.twitter}
                       </a>
@@ -185,67 +183,72 @@ class Player extends React.Component {
             </Link>
           )}
         </section>
-        <section className="tournament-list">
-          <div className="grid-container">
-            <div className="grid-row grid-header">
-              <div>Date</div>
-              <div>Tournament</div>
-              <div>Place</div>
-              <div># Entrants</div>
+        {this.state.tournaments && (
+          <section className="tournament-list">
+            <div className="grid-container">
+              <div className="grid-row grid-header">
+                <div>Date</div>
+                <div>Tournament</div>
+                <div>Place</div>
+                <div># Entrants</div>
+              </div>
+              {this.state.tournaments.map((tournament, index) => {
+                return (
+                  <Link to={`/tournament/${tournament.key}`}>
+                    <div className="grid-row" key={index}>
+                      <div>{tournament.tournamentDate}</div>
+                      <div>
+                        {tournament.country && tournament.country !== "" && (
+                          <Flag code={tournament.country} height="16" />
+                        )}
+                        &nbsp;
+                        {tournament.tournamentName}
+                      </div>
+                      <div>
+                        {tournament.place}
+                        {tournament.place.toString()[
+                          tournament.place.toString().length - 1
+                        ] === "1"
+                          ? "st"
+                          : tournament.place.toString()[
+                              tournament.place.toString().length - 1
+                            ] === "3"
+                          ? "rd"
+                          : tournament.place.toString()[
+                              tournament.place.toString().length - 1
+                            ] === "2"
+                          ? "nd"
+                          : tournament.place.toString()[
+                              tournament.place.toString().length - 2
+                            ] === "1" &&
+                            tournament.place.toString()[
+                              tournament.place.toString().length - 1
+                            ] === "1"
+                          ? "th"
+                          : tournament.place.toString()[
+                              tournament.place.toString().length - 2
+                            ] === "1" &&
+                            tournament.place.toString()[
+                              tournament.place.toString().length - 1
+                            ] === "2"
+                          ? "th"
+                          : tournament.place.toString()[
+                              tournament.place.toString().length - 2
+                            ] === "1" &&
+                            tournament.place.toString()[
+                              tournament.place.toString().length - 1
+                            ] === "3"
+                          ? "th"
+                          : "th"}
+                      </div>
+                      <div>{tournament.results.length}</div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
-            {this.state.tournaments.map((tournament, index) => {
-              return (
-                <Link to={`/tournament/${tournament.key}`}>
-                  <div className="grid-row" key={index}>
-                    <div>{tournament.tournamentDate}</div>
-                    <div>
-                      <Flag code={tournament.country} height="16" />{" "}
-                      {tournament.tournamentName}
-                    </div>
-                    <div>
-                      {tournament.place}
-                      {tournament.place.toString()[
-                        tournament.place.toString().length - 1
-                      ] === "1"
-                        ? "st"
-                        : tournament.place.toString()[
-                            tournament.place.toString().length - 1
-                          ] === "3"
-                        ? "rd"
-                        : tournament.place.toString()[
-                            tournament.place.toString().length - 1
-                          ] === "2"
-                        ? "nd"
-                        : tournament.place.toString()[
-                            tournament.place.toString().length - 2
-                          ] === "1" &&
-                          tournament.place.toString()[
-                            tournament.place.toString().length - 1
-                          ] === "1"
-                        ? "th"
-                        : tournament.place.toString()[
-                            tournament.place.toString().length - 2
-                          ] === "1" &&
-                          tournament.place.toString()[
-                            tournament.place.toString().length - 1
-                          ] === "2"
-                        ? "th"
-                        : tournament.place.toString()[
-                            tournament.place.toString().length - 2
-                          ] === "1" &&
-                          tournament.place.toString()[
-                            tournament.place.toString().length - 1
-                          ] === "3"
-                        ? "th"
-                        : "th"}
-                    </div>
-                    <div>{tournament.results.length}</div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
+          </section>
+        )}
       </>
     );
   }

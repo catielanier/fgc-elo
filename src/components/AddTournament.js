@@ -285,7 +285,7 @@ class AddTournament extends React.Component {
       });
       await axios({
         method: "get",
-        url: `${tournamentId}/results.json`,
+        url: `${bracketUrl}/results.json`,
         header: {
           "content-type": "text/plain"
         }
@@ -382,29 +382,9 @@ class AddTournament extends React.Component {
             players[dbIndex2] = playerTwo;
           }
         }
-        await playerResults.map(async player => {
-          const playerIndex = players.findIndex(p => p.name === player.name);
-
-          players[playerIndex].tournamentScore = tournamentPoints(
-            player.place,
-            players[playerIndex].tournamentScore,
-            players.length
-          );
-        });
-
-        players.forEach(player => {
-          if (!player.key) {
-            this.dbRefPlayers.push(player);
-          } else {
-            this.dbRefPlayer = firebase.database().ref(`players/${player.key}`);
-            delete player.key;
-            this.dbRefPlayer.update(player);
-          }
-        });
       });
 
       await playerResults.map(async player => {
-        console.log(playerResults.length);
         const playerIndex = players.findIndex(p => p.name === player.name);
 
         players[playerIndex].tournamentScore = tournamentPoints(
@@ -424,6 +404,7 @@ class AddTournament extends React.Component {
         }
       });
     }
+
     playerResults.forEach(player => {
       const index = this.state.playersInDB.findIndex(
         dbPlayer => player.name === dbPlayer.name

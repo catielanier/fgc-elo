@@ -66,6 +66,12 @@ class EditTournament extends React.Component {
       vodUrl
     };
 
+    for (let item in tournament) {
+      if (tournament[item] === undefined || tournament[item] === "") {
+        delete tournament[item];
+      }
+    }
+
     this.dbRefTournament = firebase.database().ref(`tournaments/${key}`);
     await this.dbRefTournament.update(tournament);
     await this.setState({
@@ -91,6 +97,9 @@ class EditTournament extends React.Component {
   };
 
   render() {
+    if (this.state.success) {
+      return <Redirect to={`/tournament/${this.state.key}`} />;
+    }
     return (
       <section className="edit-tournament">
         <form onSubmit={this.editTournament}>

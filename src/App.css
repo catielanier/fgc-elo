@@ -474,7 +474,7 @@ p.error-message span {
 
 .tournament-list .grid-container .grid-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1.3fr 5fr repeat(2, 1fr);
 }
 
 .tournament > .grid-container {
