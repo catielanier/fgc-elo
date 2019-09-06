@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import Select from "react-select";
 import countries from "./countries";
 import firebase from "../firebase";
+import SelectStyle from "./styles/SelectStyle";
 
 class EditTournament extends React.Component {
   state = {
@@ -125,7 +126,11 @@ class EditTournament extends React.Component {
             </label>
             <label htmlFor="country">
               Country:
-              <Select onChange={this.setCountry} options={countries} />
+              <Select
+                onChange={this.setCountry}
+                options={countries}
+                styles={SelectStyle}
+              />
             </label>
             <label htmlFor="vodUrl">
               Replay URL:

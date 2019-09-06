@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import firebase from "../firebase";
 import countries from "./countries";
 import characters from "./characters";
+import SelectStyle from "./styles/SelectStyle";
 
 class EditPlayer extends React.Component {
   state = {
@@ -172,11 +173,19 @@ class EditPlayer extends React.Component {
             </label>
             <label htmlFor="country">
               <p>Country</p>
-              <Select onChange={this.setCountry} options={countries} />
+              <Select
+                onChange={this.setCountry}
+                options={countries}
+                styles={SelectStyle}
+              />
             </label>
             <label htmlFor="character">
               <p>Main Character:</p>
-              <Select options={characters} onChange={this.setCharacter} />
+              <Select
+                options={characters}
+                onChange={this.setCharacter}
+                styles={SelectStyle}
+              />
             </label>
             <label htmlFor="team">
               <p>Team Name:</p>

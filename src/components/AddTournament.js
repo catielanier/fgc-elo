@@ -1,13 +1,14 @@
 import React from "react";
 import axios from "axios";
 import Helmet from "react-helmet";
+import Select from "react-select";
 import firebase from "../firebase";
 import findPlace from "./findPlace";
 import { challongeKey } from "../apiKeys";
 import tournamentPoints from "./tournamentPoints";
 import calculateElo from "./calculateElo";
 import countries from "./countries";
-import Select from "react-select";
+import SelectStyle from "./styles/SelectStyle";
 
 class AddTournament extends React.Component {
   state = {
@@ -503,6 +504,7 @@ class AddTournament extends React.Component {
                 name="country"
                 onChange={this.setCountry}
                 options={countries}
+                styles={SelectStyle}
               />
             </label>
             <label htmlFor="playerList">
