@@ -103,32 +103,33 @@ class AddTournament extends React.Component {
       }
     });
 
-    const tournamentId = bracketUrl
-      .replace("https://challonge.com/", "")
-      .replace("https://www.burningmeter.com/t/", "");
+    let tournamentId = null;
 
     this.dbRefTournaments = firebase.database().ref("tournaments/");
-
-    this.dbRefTournaments.on("value", snapshot => {
-      tournaments = snapshot.val();
-
-      for (let key in tournaments) {
-        if (
-          tournaments[key].bracketApi === bracketApi &&
-          tournaments[key].tournamentId === tournamentId
-        ) {
-          this.setState({
-            error: true,
-            message: "This tournament has already been put into the database!"
-          });
-          return;
-        }
-      }
-    });
 
     if (bracketApi === "challonge") {
       const subDomainIndex = bracketUrl.indexOf("https://challonge.com");
       if (subDomainIndex !== -1) {
+        tournamentId = bracketUrl.replace("https://challonge.com/", "");
+
+        this.dbRefTournaments.on("value", snapshot => {
+          tournaments = snapshot.val();
+
+          for (let key in tournaments) {
+            if (
+              tournaments[key].bracketApi === bracketApi &&
+              tournaments[key].tournamentId === tournamentId
+            ) {
+              this.setState({
+                error: true,
+                message:
+                  "This tournament has already been put into the database!"
+              });
+              return;
+            }
+          }
+        });
+
         await axios({
           method: "get",
           url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}/matches.json`,
@@ -152,6 +153,28 @@ class AddTournament extends React.Component {
       } else {
         const domainIndex = bracketUrl.indexOf(".challonge");
         subDomain = bracketUrl.substring(8, domainIndex);
+        tournamentId = bracketUrl.replace(
+          `https://${subDomain}.challonge.com/`,
+          ""
+        );
+        this.dbRefTournaments.on("value", snapshot => {
+          tournaments = snapshot.val();
+
+          for (let key in tournaments) {
+            if (
+              tournaments[key].bracketApi === bracketApi &&
+              tournaments[key].tournamentId === tournamentId &&
+              tournaments[key].subDomain === subDomain
+            ) {
+              this.setState({
+                error: true,
+                message:
+                  "This tournament has already been put into the database!"
+              });
+              return;
+            }
+          }
+        });
         await axios({
           method: "get",
           url: `https://strawberry.sh/api/v1/tournaments/${subDomain}-${tournamentId}/matches.json`,
@@ -305,6 +328,23 @@ class AddTournament extends React.Component {
     }
 
     if (bracketApi === "burningmeter") {
+      tournamentId = bracketUrl.replace("https://www.burningmeter.com/t/", "");
+      this.dbRefTournaments.on("value", snapshot => {
+        tournaments = snapshot.val();
+
+        for (let key in tournaments) {
+          if (
+            tournaments[key].bracketApi === bracketApi &&
+            tournaments[key].tournamentId === tournamentId
+          ) {
+            this.setState({
+              error: true,
+              message: "This tournament has already been put into the database!"
+            });
+            return;
+          }
+        }
+      });
       await axios({
         method: "get",
         url: `${bracketUrl}/s/bracket.json`,
@@ -448,6 +488,8 @@ class AddTournament extends React.Component {
       tournamentDate,
       tournamentId,
       bracketApi,
+      bracketUrl,
+      subDomain,
       country,
       countryLong,
       paperBracket,
