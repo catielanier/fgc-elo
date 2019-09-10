@@ -4,7 +4,7 @@ import Helmet from "react-helmet";
 import Select from "react-select";
 import firebase from "../firebase";
 import findPlace from "./findPlace";
-import { challongeKey } from "../apiKeys";
+import { challongeKey, smashKey } from "../apiKeys";
 import tournamentPoints from "./tournamentPoints";
 import calculateElo from "./calculateElo";
 import countries from "./countries";
@@ -90,6 +90,10 @@ class AddTournament extends React.Component {
 
     let tournaments = null;
 
+    let participants = null;
+
+    let subDomain = null;
+
     const bracketSiteArray = ["challonge", "smash", "burningmeter"];
 
     bracketSiteArray.forEach(site => {
@@ -123,36 +127,62 @@ class AddTournament extends React.Component {
     });
 
     if (bracketApi === "challonge") {
-      await axios({
-        method: "get",
-        url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}/matches.json`,
-        params: {
-          api_key: challongeKey
-        }
-      }).then(res => {
-        matches = res.data;
+      const subDomainIndex = bracketUrl.indexOf("https://challonge.com");
+      if (subDomainIndex !== -1) {
+        await axios({
+          method: "get",
+          url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}/matches.json`,
+          params: {
+            api_key: challongeKey
+          }
+        }).then(res => {
+          matches = res.data;
+        });
+
+        await axios({
+          method: "get",
+          url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}.json`,
+          params: {
+            api_key: challongeKey,
+            include_participants: "1"
+          }
+        }).then(res => {
+          participants = res.data.tournament.participants;
+        });
+      } else {
+        const domainIndex = bracketUrl.indexOf(".challonge");
+        subDomain = bracketUrl.substring(8, domainIndex);
+        await axios({
+          method: "get",
+          url: `https://strawberry.sh/api/v1/tournaments/${subDomain}-${tournamentId}/matches.json`,
+          params: {
+            api_key: challongeKey
+          }
+        }).then(res => {
+          matches = res.data;
+        });
+        await axios({
+          method: "get",
+          url: `https://strawberry.sh/api/v1/tournaments/${subDomain}-${tournamentId}.json`,
+          params: {
+            api_key: challongeKey,
+            include_participants: "1"
+          }
+        }).then(res => {
+          participants = res.data.tournament.participants;
+        });
+      }
+
+      participants.sort(function(x, y) {
+        return (
+          x.participant.final_rank - y.participant.final_rank ||
+          x.participant.seed - y.participant.seed
+        );
+      });
+      participants.map((participant, index) => {
+        playerResults[index].id = participant.participant.id;
       });
 
-      await axios({
-        method: "get",
-        url: `https://strawberry.sh/api/v1/tournaments/${tournamentId}.json`,
-        params: {
-          api_key: challongeKey,
-          include_participants: "1"
-        }
-      }).then(res => {
-        let { participants } = res.data.tournament;
-
-        participants.sort(function(x, y) {
-          return (
-            x.participant.final_rank - y.participant.final_rank ||
-            x.participant.seed - y.participant.seed
-          );
-        });
-        participants.map((participant, index) => {
-          playerResults[index].id = participant.participant.id;
-        });
-      });
       await matches.map(match => {
         const index = playerResults.findIndex(
           player => match.match.player1_id === player.id
