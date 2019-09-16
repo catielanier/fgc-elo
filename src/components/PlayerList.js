@@ -11,7 +11,6 @@ import mercury from "../assets/mercury.png";
 import chibi from "../assets/chibi.png";
 import jupiter from "../assets/jupiter.png";
 import neptune from "../assets/neptune.png";
-import { spawn } from "child_process";
 
 class PlayerList extends React.Component {
   state = {

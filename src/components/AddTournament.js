@@ -63,7 +63,7 @@ class AddTournament extends React.Component {
 
     const players = this.state.playersInDB;
 
-    await playerList.map((player, index) => {
+    await playerList.forEach((player, index) => {
       const res = {
         name: player
       };
@@ -202,11 +202,11 @@ class AddTournament extends React.Component {
           x.participant.seed - y.participant.seed
         );
       });
-      participants.map((participant, index) => {
+      participants.forEach((participant, index) => {
         playerResults[index].id = participant.participant.id;
       });
 
-      await matches.map(match => {
+      await matches.forEach(match => {
         const index = playerResults.findIndex(
           player => match.match.player1_id === player.id
         );
@@ -368,14 +368,14 @@ class AddTournament extends React.Component {
             x.name.localeCompare(y.name)
           );
         });
-        entrants.map((entrant, index) => {
+        entrants.forEach((entrant, index) => {
           playerResults[index].id = entrant.id;
         });
       });
       matches = matches.sort(function(x, y) {
         return x.ordering - y.ordering;
       });
-      await matches.map(match => {
+      await matches.forEach(match => {
         const index = playerResults.findIndex(
           player => player.id === match.entrant_top_id
         );

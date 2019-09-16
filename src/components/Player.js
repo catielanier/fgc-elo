@@ -72,7 +72,6 @@ class Player extends React.Component {
             tournament.place = player.place;
           }
         });
-        console.log(tournament.place);
       });
 
       await this.setState({

@@ -23,9 +23,7 @@ class Header extends React.Component {
             <Link to="/">Leaderboard</Link>
             <Link to="/add-tournament">Add Tournament</Link>
             <Link to="/add-player">Add Player</Link>
-            <a href="#" onClick={this.doLogout}>
-              Logout
-            </a>
+            <button onClick={this.doLogout}>Logout</button>
           </div>
         )}
         <div className="header-text">
