@@ -306,10 +306,6 @@ fieldset {
   padding: 0;
 }
 
-fieldset[disabled="true"] {
-  opacity: 0.5;
-}
-
 fieldset::before {
   height: 10px;
   content: "";
